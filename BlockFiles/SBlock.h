@@ -1,0 +1,15 @@
+#ifndef SBLOCK_H
+#define SBLOCK_H
+#include "../Block.h"
+#include "../Cell.h"
+#include "../Enums.h"
+
+class SBlock: public Block{
+public:
+    SBlock(const int row, const int col, const int level);
+
+    std::vector<Cell>& getCells() override;
+};
+
+#endif
+
