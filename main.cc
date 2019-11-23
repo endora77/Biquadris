@@ -5,46 +5,100 @@ using namespace std;
 
 
 int main(int argc, char *argv[]) {
+  cin.exceptions(ios::eofbit|ios::failbit);
   string cmd;
   int times;
   string subCmd;
   string restCmd;
 
+  try {
   while (true){
     cin >> cmd;
-    int times = 0;
-    for (int i = 0; i < cmd.length; ++i){
+    // check if cmd has multiplier prefix and separate the prefix and the command
+    for (int i = 0; i < cmd.length(); ++i){
       if ( isdigit(cmd[i]) ) {
 	subCmd += cmd[i];
       } else {
 	restCmd = cmd.substr(i);
-	for ( int i = 0; i < 
-    if (cmd == "left"){
+      }
+    }
+    times = atoi(subCmd);
+    
+    // distinguish the abbreviation of command
 
-    } else if (cmd == "right"){
+    if ((subCmd == "left") || (subCmd == "lef") ) { subCmd = "left"; }
+    if ((subCmd == "ri") || (subCmd == "rig") || (subCmd == "righ") || (subCmd == "right")) { subCmd = "right"; }
+    if ((subCmd == "do") || (subCmd == "dow") || (subCmd == "down")) { subCmd = "down"; }
+    if ((subCmd == "cl") || (subCmd == "clo") || (subCmd == "cloc") || (subCmd == "clock") || (subCmd == "clockw") || 
+	(subCmd == "clockwi") || (subCmd == "clockwis") || (subCmd == "clockwise")) { subCmd = "clockwise"; }
+    if ((subCmd == "co") || (subCmd == "cou") || (subCmd == "coun") || (subCmd == "count") || (subCmd == "counte") ||
+	(subCmd == "counter") || (subCmd == "counterc") || (subCmd == "countercl") || (subCmd == "counterclo") ||
+	(subCmd == "countercloc") || (subCmd == "counterclock") || (subCmd == "counterclockw") || (subCmd == "counterclockwi")) ||
+	(subCmd == "counterclockwis") || (subCmd == "counterclockwise") { subCmd = "counterclockwise"; }
+    if ((subCmd == "dr") || (subCmd == "dro") || (subCmd == "drop")) { subCmd = "drop"; }
+    if ((subCmd == "levelu") || (subCmd == "levelup")) { subCmd = "levelup"; }
+    if ((subCmd == "leveld") || (subCmd == "leveldo") || (subCmd == "leveldow") || (subCmd == "leveldown")) { subCmd = "leveldown"; }
+    if ((subCmd == "n") || (subCmd == "no") || (subCmd == "nor") || (subCmd == "nora") || (subCmd == "noran") || (subCmd == "norand") || 
+	(subCmd == "norando") || (subCmd == "norandom")) { subCmd = "norandom"; }
+    if ((subCmd == "ra") || (subCmd == "ran") || (subCmd == "rand") || (subCmd == "rando") || (subCmd == "random")) { subCmd = "random"; }
+    if ((subCmd == "s") || (subCmd == "se") || (subCmd == "seq") || (subCmd == "sequ") || (subCmd == "seque") || (subCmd == "sequen") || 
+	(subCmd == "sequenc") || (subCmd == "sequence")) { cubCmd = "sequence"; }
+    if ((subCmd == "re") || (subCmd == "res") || (subCmd == "rest") || (subCmd == "resta") || (subCmd == "restar") ||
+	(subCmd == "restart")) { subCmd = "restart"; }
 
-    } else if (cmd == "down"){
+    for (int t = 0; t < times; ++t){
+      	
+      if (cmd == "left"){
 
-    } else if (cmd == "clockwise"){
+      } else if (cmd == "right"){
 
-    } else if (cmd == "counterclockwise"){
+      } else if (cmd == "down"){
 
-    } else if (cmd == "drop"){
+      } else if (cmd == "clockwise"){
 
-    } else if (cmd == "levelup"){
+      } else if (cmd == "counterclockwise"){
 
-    } else if (cmd == "leveldown"){
+      } else if (cmd == "drop"){
 
-    } else if (cmd == "norandom"){
+      } else if (cmd == "levelup"){
+
+      } else if (cmd == "leveldown"){
+
+      } else if (cmd == "norandom"){
 	cin >> cmd;
 	// now cmd is the sequence file
-    } else if (cmd == "random"){
 
-    } else if (cmd == "sequence"){
+	break; // multiplier prefix has no effect on this command;
+      } else if (cmd == "random"){
+	
+	break; // multiplier prefix has no effect on this command;
+      } else if (cmd == "sequence"){
 	cin >> cmd;
 	// now cmd is the file containing a sequence of cmds
 	ofstream myCmds;
 	myCmds.open(cmd);
 	
 	myfile.close();
-    } else if (cmd == "")
+      } else if (cmd == "restart"){
+
+	break; // multiplier prefix has no effect on this command;	
+      } else if (cmd == "I"){
+
+      } else if (cmd == "J"){
+
+      } else if (cmd == "L"){
+
+      } else if (cmd == "O"){
+
+      } else if (cmd == "S"){
+
+      } else if (cmd == "Z"){
+
+      } else if (cmd == "T"){
+
+      }
+    }
+  }
+  }
+  catch (ios::failure &) {}  // Any I/O failure quits
+}        
