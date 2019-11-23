@@ -26,25 +26,38 @@ int main(int argc, char *argv[]) {
     
     // distinguish the abbreviation of command
 
-    if ((subCmd == "left") || (subCmd == "lef") ) { subCmd = "left"; }
-    if ((subCmd == "ri") || (subCmd == "rig") || (subCmd == "righ") || (subCmd == "right")) { subCmd = "right"; }
-    if ((subCmd == "do") || (subCmd == "dow") || (subCmd == "down")) { subCmd = "down"; }
-    if ((subCmd == "cl") || (subCmd == "clo") || (subCmd == "cloc") || (subCmd == "clock") || (subCmd == "clockw") || 
-	(subCmd == "clockwi") || (subCmd == "clockwis") || (subCmd == "clockwise")) { subCmd = "clockwise"; }
-    if ((subCmd == "co") || (subCmd == "cou") || (subCmd == "coun") || (subCmd == "count") || (subCmd == "counte") ||
-	(subCmd == "counter") || (subCmd == "counterc") || (subCmd == "countercl") || (subCmd == "counterclo") ||
-	(subCmd == "countercloc") || (subCmd == "counterclock") || (subCmd == "counterclockw") || (subCmd == "counterclockwi")) ||
-	(subCmd == "counterclockwis") || (subCmd == "counterclockwise") { subCmd = "counterclockwise"; }
-    if ((subCmd == "dr") || (subCmd == "dro") || (subCmd == "drop")) { subCmd = "drop"; }
-    if ((subCmd == "levelu") || (subCmd == "levelup")) { subCmd = "levelup"; }
-    if ((subCmd == "leveld") || (subCmd == "leveldo") || (subCmd == "leveldow") || (subCmd == "leveldown")) { subCmd = "leveldown"; }
-    if ((subCmd == "n") || (subCmd == "no") || (subCmd == "nor") || (subCmd == "nora") || (subCmd == "noran") || (subCmd == "norand") || 
-	(subCmd == "norando") || (subCmd == "norandom")) { subCmd = "norandom"; }
-    if ((subCmd == "ra") || (subCmd == "ran") || (subCmd == "rand") || (subCmd == "rando") || (subCmd == "random")) { subCmd = "random"; }
-    if ((subCmd == "s") || (subCmd == "se") || (subCmd == "seq") || (subCmd == "sequ") || (subCmd == "seque") || (subCmd == "sequen") || 
-	(subCmd == "sequenc") || (subCmd == "sequence")) { cubCmd = "sequence"; }
-    if ((subCmd == "re") || (subCmd == "res") || (subCmd == "rest") || (subCmd == "resta") || (subCmd == "restar") ||
-	(subCmd == "restart")) { subCmd = "restart"; }
+    if ( subCmd == "lef" ) { 
+      subCmd = "left";
+    } else if ((subCmd == "ri") || (subCmd == "rig") || (subCmd == "righ")) {
+      subCmd = "right";
+    } else if ((subCmd == "do") || (subCmd == "dow")) {
+      subCmd = "down";
+    } else if ((subCmd == "cl") || (subCmd == "clo") || (subCmd == "cloc") || (subCmd == "clock") || (subCmd == "clockw") ||
+		(subCmd == "clockwi") || (subCmd == "clockwis")) {
+      subCmd = "clockwise";
+    } else if ((subCmd == "co") || (subCmd == "cou") || (subCmd == "coun") || (subCmd == "count") || (subCmd == "counte") ||
+		(subCmd == "counter") || (subCmd == "counterc") || (subCmd == "countercl") || (subCmd == "counterclo") ||
+		(subCmd == "countercloc") || (subCmd == "counterclock") || (subCmd == "counterclockw") || (subCmd == "counterclockwi")) ||
+		(subCmd == "counterclockwis")) {
+      subCmd = "counterclockwise";
+    } else if ((subCmd == "dr") || (subCmd == "dro")) {
+      subCmd = "drop";
+    } else if (subCmd == "levelu") {
+      subCmd = "levelup";
+    } else if ((subCmd == "leveld") || (subCmd == "leveldo") || (subCmd == "leveldow")) {
+      subCmd = "leveldown";
+    } else if ((subCmd == "n") || (subCmd == "no") || (subCmd == "nor") || (subCmd == "nora") || (subCmd == "noran") ||
+		(subCmd == "norand") || (subCmd == "norando")) {
+      subCmd = "norandom";
+    } else if ((subCmd == "ra") || (subCmd == "ran") || (subCmd == "rand") || (subCmd == "rando")) {
+      subCmd = "random";
+    } else if ((subCmd == "s") || (subCmd == "se") || (subCmd == "seq") || (subCmd == "sequ") || (subCmd == "seque") ||
+		(subCmd == "sequen") || (subCmd == "sequenc")) {
+      cubCmd = "sequence";
+    } else if ((subCmd == "re") || (subCmd == "res") || (subCmd == "rest") || (subCmd == "resta") || (subCmd == "restar")) {
+      subCmd = "restart";
+    }
+
 
     for (int t = 0; t < times; ++t){
       	
@@ -75,10 +88,26 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "sequence"){
 	cin >> cmd;
 	// now cmd is the file containing a sequence of cmds
-	ofstream myCmds;
+	ifstream myCmds;
 	myCmds.open(cmd);
+	char c;
+	while (myCmds.get(c)){
+	  if (c == 'I'){
 	
-	myfile.close();
+	  } else if (c == 'J'){
+
+          } else if (c == 'L'){
+
+          } else if (c == 'O'){
+
+          } else if (c == 'S'){
+
+          } else if (c == 'Z'){
+
+          } else if (c == 'T'){
+	
+	  }
+	  myfile.close();
       } else if (cmd == "restart"){
 
 	break; // multiplier prefix has no effect on this command;	
