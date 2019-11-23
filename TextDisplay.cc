@@ -107,21 +107,22 @@ void TextDisplay::fillTopInfo() {
 void fillNextBlock() {
     BlockType type = board.getNextBlock();
     if (type == BlockType::IBlock) {
-        for (int i = 0; i < 4; i += 1) {
-            theDisplay[row + 6][i] = 'I';
-        }
+        theDisplay[row + 6][0] = 'I';
+        theDisplay[row + 6][1] = 'I';
+        theDisplay[row + 6][2] = 'I';
+        theDisplay[row + 6][3] = 'I';
     }
     if (type == BlockType::JBlock) {
         theDisplay[row + 5][0] = 'J';
-        for (int i = 0; i < 3; i += 1) {
-            theDisplay[row + 6][i] = 'J';
-        }
+        theDisplay[row + 6][0] = 'J';
+        theDisplay[row + 6][1] = 'J';
+        theDisplay[row + 6][2] = 'J';
     }
     if (type == BlockType::LBlock) {
         theDisplay[row + 5][2] = 'L';
-        for (int i = 0; i < 3; i += 1) {
-            theDisplay[row + 6][i] ='L';
-        }
+        theDisplay[row + 6][0] = 'L';
+        theDisplay[row + 6][1] ='L';
+        theDisplay[row + 6][2] ='L';
     }
     if (type == BlockType::OBlock) {
         theDisplay[row + 5][0] = 'O';
@@ -149,7 +150,7 @@ void fillNextBlock() {
     }
 }
 
-std::ostream &TextDisplay::operator<<(std::ostream &out, const TextDisplay &tDisplay) {
+std::ostream &TextDisplay::operator<<(std::ostream &out, const TextDisplay &td) {
     int row = td.theDisplay.size();
     for (int i = 0; i < row; i += 1) {
         int column = td.theDisplay[i].size();
