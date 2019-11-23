@@ -4,9 +4,9 @@
 
 class Level {
 public:
-    BlockType nextBlock() = 0;
-    bool heavy() = 0;
-    bool addStar() = 0;
+    virtual BlockType nextBlock() = 0;
+    virtual bool heavy() = 0;
+    virtual bool addStar() = 0;
 };
 
 
