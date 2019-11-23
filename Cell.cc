@@ -4,34 +4,26 @@
 
 using namespace std;
 
-// Constructor
-Cell::Cell(bool filled, int row, int column, BlockType type) {
-    this->filled = filled;
-    position = make_pair(row, column);
-    this->type = type;
-}
-
-// setPosition(int row, int column) modifies the Cell's position of the board
-// This method would only be called to handle rotation (i.e. clockwise and counterclockwise)
-void Cell::setPosition(int row, int column) {
-    position.first = row;
-    position.second =
-}
 
 // notifyObservers() notifies the Block that the cell belongs to when changing position
 void Cell::notifyObservers() {
-
+    
 }
 
+//Finished Below****************************************************************************************************************
+// Constructor
+Cell::Cell(int row, int column, BlockType type): type{type}{
+    position = make_pair(row, column);
+}
 // getPosition() returns the reference to the position of the cell on the board
-std::pair<int, int> &Cell::getPosition() {
-    return *position;
+std::pair<int, int> Cell::getPosition() const{
+    return position;
 }
-
 
 // getState() returns the status of the cell (filled or not)
-bool Cell::getState() {
-    return filled;
+bool Cell::getState() const{
+    if(position.first == -1) return false;
+    return true;
 }
 
 // moveDown(int num) moves the cell "num" cell down

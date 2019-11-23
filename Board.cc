@@ -24,12 +24,20 @@ void Board::setLevel(int l){
     nextType = level->nextBlock();
 }
 
-void Board::newBlock(){
+void Board::newBlock(const BlockType type, const int row, const int col){
+    switch(type):{
+        case typeZ: return new ZBlock{row, col, level};
+        ...
+        //Not finished, and every other blocks
+    }
+}
+
+void Board::getNextBlock(){
     tempScore = 0;
     BlockType type;
     if(restriction->forced()) type = restriction->getForcedType();
     else type = nextType;
-    currentBlock = new Block{type, 0, 3, level};
+    currentBlock = newBlock{type, 0, 3};
     blocks.push_back(currentBlock);
 }
 

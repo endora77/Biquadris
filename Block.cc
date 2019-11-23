@@ -4,22 +4,11 @@
 
 void Block::notify();
 
-
-// checkExist() returns the boolean value of whether the Block exists on the Board
-bool Block::checkExist() {
-    return exist;
-}
-
-// getLevel() returns the level of the the Block when it's been created
-int Block::getLevel() {
-    return level;
-}
-
 // calcPosition(MoveType type, int num) returns the pointer to the position of the first cell
 // after perform the move for "num" cells
-std::pair<int, int> *Block::calcPosition(MoveType type, int num) {
+std::pair<int, int> *Block::calcPosition(const MoveType type, const int num) const{
     if (type == MoveType::moveDown) {
-
+        return make_
     }
     if (type == MoveType::moveLeft) {}
     if (type == MoveType::moveRight) {}
@@ -27,26 +16,33 @@ std::pair<int, int> *Block::calcPosition(MoveType type, int num) {
     if (type == MoveType::moveCounterClockwise) {}
 }
 
+//Finished Below********************************************************************************************
+// checkExist() returns the boolean value of whether the Block exists on the Board
+bool Block::checkExist() {
+    int i = 0;
+    for(auto&c : cells){
+        if(c.getState) break;
+        i++;
+    }
+    if (i == numCells) return false;
+    else return true;
+}
+
+// getLevel() returns the level of the the Block when it's been created
+int Block::getLevel() {
+    return level;
+}
 
 // down(int num) moves the position of the Block down "num" cell(s)
 void Block::down(int num) {
-    Cell *[4] cells = getCells();
-    for (int i = 0; i < 4; i += 1) {
-        cells[i]->moveDown(num);
-    }
+    for (auto& c: cells) c.moveDown(num);
 }
 
 // left(int num) moves the position of the Block left "num" cell(s)
 void Block::left(int num) {
-    Cell *[4] cells = getCells();
-    for (int i = 0; i < 4; i += 1) {
-        cells[i]->moveLeft(num);
-    }
+    for (auto& c: cells) c.moveLeft(num);
 }
 // right(int num) moves the position of the Block right "num" cell(s)
 void Block::right(int num) {
-    Cells *[4] cells = getCells();
-    for (int i = 0; i < 4; i += 1) {
-        cells[i]->moveRight(num);
-    }
+    for (auto& c: cells) c.moveRight(num);
 }
