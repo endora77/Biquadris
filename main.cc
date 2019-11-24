@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
     // check if cmd has multiplier prefix and separate the prefix and the command
     for (int i = 0; i < cmd.length(); ++i){
       if ( isdigit(cmd[i]) ) {
-	subCmd += cmd[i];
+	      subCmd += cmd[i];
       } else {
-	restCmd = cmd.substr(i);
+	      restCmd = cmd.substr(i);
       }
     }
-    times = atoi(subCmd);
+    times = stoi(subCmd);
     
     // distinguish the abbreviation of command
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
       subCmd = "restart";
     }
 
-
+    // run commands several times (it needed)
     for (int t = 0; t < times; ++t){
       	
       if (cmd == "left"){
@@ -78,23 +78,23 @@ int main(int argc, char *argv[]) {
       } else if (cmd == "leveldown"){
 
       } else if (cmd == "norandom"){
-	cin >> cmd;
-	// now cmd is the sequence file
+	      cin >> cmd;
+	      // now cmd is the sequence file
 
-	break; // multiplier prefix has no effect on this command;
+	      break;                    // multiplier prefix has no effect on this command;
       } else if (cmd == "random"){
 	
-	break; // multiplier prefix has no effect on this command;
+	      break;                    // multiplier prefix has no effect on this command;
       } else if (cmd == "sequence"){
-	cin >> cmd;
-	// now cmd is the file containing a sequence of cmds
-	ifstream myCmds;
-	myCmds.open(cmd);
-	char c;
-	while (myCmds.get(c)){
-	  if (c == 'I'){
+	      cin >> cmd;
+	      // now cmd is the sequence file of blocks
+	      ifstream myCmds;
+	      myCmds.open(cmd);
+	      char c;
+	      while (myCmds.get(c)){
+	        if (c == 'I'){
 	
-	  } else if (c == 'J'){
+	        } else if (c == 'J'){
 
           } else if (c == 'L'){
 
@@ -106,13 +106,14 @@ int main(int argc, char *argv[]) {
 
           } else if (c == 'T'){
 	
-	  }
-	  myfile.close();
+	        }
+        } 
+	      myfile.close();
       } else if (cmd == "restart"){
 
-	break; // multiplier prefix has no effect on this command;	
+        break; // multiplier prefix has no effect on this command;	
       } else if (cmd == "I"){
-
+      
       } else if (cmd == "J"){
 
       } else if (cmd == "L"){
@@ -128,6 +129,6 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-  }
+  }   
   catch (ios::failure &) {}  // Any I/O failure quits
 }        
