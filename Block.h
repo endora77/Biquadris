@@ -37,7 +37,8 @@ public:
     // right(int num) moves the position of the Block right "num" cell(s)
     void right(int num);
     
-    virtual std::vector<Cell>& getCells() = 0;
+    std::vector<Cell>& getCells();
+    virtual ~Block() = 0;
 };
 
 

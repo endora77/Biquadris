@@ -51,3 +51,9 @@ void Block::left(int num) {
 void Block::right(int num) {
     for (auto& c: cells) c.moveRight(num);
 }
+
+std::vector<Cell>& Block::getCells(){
+    return cells;
+}
+
+Block::~Block(){}

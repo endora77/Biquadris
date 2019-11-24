@@ -1,7 +1,9 @@
 #include "Board.h"
 using namespace std;
+//Blind is not finished
+//call notifyObservers(); whenever needs refress
 //Throws an error
-void Board::setLevel(int l){
+void Board::setLevel(const int l, const BlockType type){
     delete level;
     switch(l){
         case 0:{
@@ -35,7 +37,7 @@ void Board::newBlock(const BlockType type, const int row, const int col){
 void Board::getNextBlock(){
     tempScore = 0;
     BlockType type;
-    if(restriction->forced()) type = restriction->getForcedType();
+    if(restriction->forced) type = restriction->forcedType;
     else type = nextType;
     currentBlock = newBlock{type, 0, 3};
     blocks.push_back(currentBlock);
@@ -43,25 +45,26 @@ void Board::getNextBlock(){
 
 bool Board::checkPosition(const std::pair<int, int> *pos) const{
     for( int i = 0; i < 4; i++){
-        if(cells[pos[i].first][pos[i].second]) return false;
+        if(grid[pos[i].first][pos[i].second]) return false;
     }
     return true;
 }
 
 void Board::down(const int i){
-    //Not finished, should use unique pointer here or vector
     pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveDown, i);
-    if(Board::checkPosition(pos)) level->down(*currentBlock, i);
+    if(Board::checkPosition(pos)) level->down(*currentBlock, i); 
 }
 
 void Board::left(const int i){
     pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveLeft, i);
     if(Board::checkPosition(pos)) currentBlock->left(i);
+    if(restriction->specialHeavy) down(1);
 }
 
 void Board::right(const int i){
     pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveRight, i);
     if(Board::checkPosition(pos)) currentBlock->right(i);
+    if(restriction->specialHeavy) down(1);
 }
 
 void Board::rotateClockwise(const int i){
@@ -153,5 +156,6 @@ bool Board::checkTop(){
 
 void Board::notify(Subject* s){
     tempScore += s->getState();
-    for(auto a = blocks.begin(); a != blocks.end(); )
 }
+
+
