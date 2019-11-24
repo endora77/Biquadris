@@ -20,18 +20,18 @@ int Cell::getState() const{
     return 1;
 }
 
-// moveDown(int num) moves the cell "num" cell down
-void Cell::moveDown(int num) {
-    position.first += num;
+// moveDown() moves the cell down
+void Cell::moveDown() {
+    position.first += 1;
     notifyObservers();
 }
 
-// moveLeft(int num) moves the cell "num" cell left
-void Cell::moveLeft(int num) {
-    position.second -= num;
+// moveLeft() moves the cell left
+void Cell::moveLeft() {
+    position.second -= 1;
 }
 
-// moveRight(int num) moves the cell "num" cell right
-void Cell::moveRight(int num) {
-    position.second += num;
+// moveRight() moves the cell right
+void Cell::moveRight() {
+    position.second += 1;
 }

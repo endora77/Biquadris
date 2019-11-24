@@ -18,12 +18,12 @@ public:
         position.second = col;
         notifyObservers();
     }
-    // moveDown(int num) moves the cell "num" cell down
-    void moveDown(int num);
-    // moveLeft(int num) moves the cell "num" cell left
-    void moveLeft(int num);
-    // moveRight(int num) moves the cell "num" cell right
-    void moveRight(int num);
+    // moveDown() moves the cell down
+    void moveDown();
+    // moveLeft() moves the cell left
+    void moveLeft();
+    // moveRight() moves the cell right
+    void moveRight();
 
     // getState() returns the status of the cell (filled or not)
     int getState() const override;

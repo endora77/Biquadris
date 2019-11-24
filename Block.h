@@ -28,14 +28,14 @@ public:
     bool checkExist();
     // getLevel() returns the level of the the Block when it's been created
     int getLevel();
-    // calcPosition(MoveType type, int num) returns the position of the
-    std::pair<int, int> *calcPosition(const MoveType type, const int num) const;
-    // down(int num) moves the position of the Block down "num" cell(s)
-    void down(int num);
-    // left(int num) moves the position of the Block left "num" cell(s)
-    void left(int num);
-    // right(int num) moves the position of the Block right "num" cell(s)
-    void right(int num);
+    // calcPosition(MoveType type) returns the position of the block if certain move is done
+    std::pair<int, int> *calcPosition(const MoveType type) const;
+    // down() moves the position of the Block down
+    void down();
+    // left() moves the position of the Block left
+    void left();
+    // right() moves the position of the Block right
+    void right();
     
     std::vector<Cell>& getCells();
     virtual ~Block() = 0;

@@ -3,9 +3,6 @@
 
 
 class LevelTwo : public Level {
-    unsigned int seed;
-    const bool addStar;
-    const bool applyHeavy;
 public:
     // Constructor
     LevelTwo(unsigned int seed = 0);

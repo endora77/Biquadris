@@ -5,7 +5,7 @@
 #include <vector>
 #include "TextDisplay.h"
 //#include "Restriction.h"
-//#include "Level.h"
+#include "Level.h"
 #include "Enums.h"
 #include <string>
 #include <fstream>
@@ -45,7 +45,7 @@ class Board: public Observer{
     void draw();
     
 public:
-    void setLevel(const int l, const BlockType type);
+    void setLevel(const int l, const BlockType type, int seed);
     void getNextBlock();
     void down(const int i);
     void left(const int i);

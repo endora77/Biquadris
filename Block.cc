@@ -3,8 +3,8 @@
 #include <utility>
 
 // calcPosition(MoveType type, int num) returns the pointer to the position of the first cell
-// after perform the move for "num" cells
-std::pair<int, int> *Block::calcPosition(const MoveType type, const int num) const{
+// after perform the move
+std::pair<int, int> *Block::calcPosition(const MoveType type) const{
     if (type == MoveType::moveDown) {
         return make_
     }
@@ -38,18 +38,18 @@ int Block::getLevel() {
     return level;
 }
 
-// down(int num) moves the position of the Block down "num" cell(s)
-void Block::down(int num) {
-    for (auto& c: cells) c.moveDown(num);
+// down(int num) moves the position of the Block down
+void Block::down() {
+    for (auto& c: cells) c.moveDown();
 }
 
-// left(int num) moves the position of the Block left "num" cell(s)
-void Block::left(int num) {
-    for (auto& c: cells) c.moveLeft(num);
+// left(int num) moves the position of the Block left
+void Block::left() {
+    for (auto& c: cells) c.moveLeft();
 }
-// right(int num) moves the position of the Block right "num" cell(s)
-void Block::right(int num) {
-    for (auto& c: cells) c.moveRight(num);
+// right(int num) moves the position of the Block right
+void Block::right() {
+    for (auto& c: cells) c.moveRight();
 }
 
 std::vector<Cell>& Block::getCells(){

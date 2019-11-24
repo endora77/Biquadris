@@ -1,29 +1,38 @@
 #include "Board.h"
 using namespace std;
 //Blind is not finished
-//call notifyObservers(); whenever needs refress
+//call notifyObservers(); whenever needs refrees
 //Throws an error
-void Board::setLevel(const int l, const BlockType type){
+void Board::setLevel(const int l, const BlockType type, int seed){
     delete level;
     switch(l){
         case 0:{
-            level = new LevelZero(); break;
+            level = new LevelZero();
+            nextType = level->nextBlock(blockFile);
+            break;
         }
         case 1:{
-            level = new LevelOne(); break;
+            level = new LevelOne(seed);
+            nextType = level->nextBlock();
+            break;
         }
         case 2:{
-            level = new LevelTwo(); break;
+            level = new LevelTwo(seed);
+            nextType = level->nextBlock();
+            break;
         }
         case 3:{
-            level = new LevelThree(); break;
+            level = new LevelThree(seed);
+            nextType = level->nextBlock();
+            break;
         }
         case 4:{
-            level = new LevelFour(); break;
+            level = new LevelFour(seed);
+            nextType = level->nextBlock();
+            break;
         }
         default: throw "Invalid level";
     }
-    nextType = level->nextBlock();
 }
 
 void Board::newBlock(const BlockType type, const int row, const int col){
