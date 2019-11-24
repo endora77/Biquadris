@@ -3,13 +3,14 @@
 
 
 class LevelTwo : public Level {
+    unsigned int seed;
+    const bool addStar;
+    const bool applyHeavy;
 public:
+    // Constructor
+    LevelTwo(unsigned int seed = 0);
     // Override the nextBlock() method in the base class to select the shape of next Block dropped
     BlockType nextBlock() override;
-    // Override the heavy() method in the base class if heavy effect is applied
-    bool heavy() override;
-    // Override the addStar() method in the base class to add a star in the middle column
-    bool addStar() override;
 };
 
 

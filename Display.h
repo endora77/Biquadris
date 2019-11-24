@@ -12,6 +12,7 @@ template<typename T>class Display {
     virtual void updateScore() = 0;
     virtual void updateLevel() = 0;
     virtual void fillNextBlock() = 0;
+    virtual void notify() = 0;
 };
 
 

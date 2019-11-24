@@ -15,8 +15,7 @@ public:
     TextDisplay(int row = 15, int column = 11);
     // init(string name) is a helper function to initialize textdisplay of the board(level, score, next)
     void init(string name) override;
-    // fillBlind() fills the column 3-9, and row 3-12 with "?"
-    // until the player drops a block
+    // fillBlind() fills the column 3-9, and row 3-12 with "?" until the player drops a block
     void fillBlind() override;
     // fillBlock() fills the Block with it's corresponding letter (i.e. j for JBlock)
     void fillBlock() override;
