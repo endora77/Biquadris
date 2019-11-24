@@ -4,16 +4,10 @@
 
 using namespace std;
 
-
-// notifyObservers() notifies the Block that the cell belongs to when changing position
-void Cell::notifyObservers() {
-    
-}
-
-//Finished Below****************************************************************************************************************
 // Constructor
-Cell::Cell(int row, int column, BlockType type): type{type}{
+Cell::Cell(int row, int column, BlockType type, Block* block): type{type}{
     position = make_pair(row, column);
+    this->attach(block);
 }
 // getPosition() returns the reference to the position of the cell on the board
 std::pair<int, int> Cell::getPosition() const{
@@ -21,14 +15,15 @@ std::pair<int, int> Cell::getPosition() const{
 }
 
 // getState() returns the status of the cell (filled or not)
-bool Cell::getState() const{
-    if(position.first == -1) return false;
-    return true;
+int Cell::getState() const{
+    if(position.first == -1) return 0;
+    return 1;
 }
 
 // moveDown(int num) moves the cell "num" cell down
 void Cell::moveDown(int num) {
     position.first += num;
+    notifyObservers();
 }
 
 // moveLeft(int num) moves the cell "num" cell left

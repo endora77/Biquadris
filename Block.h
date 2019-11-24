@@ -4,9 +4,10 @@
 #include <memory>
 #include <vector>
 #include "Enums.h"
+#include "Observer.h"
 class Cell;
 
-class Block {
+class Block: public Observer, public Subject{
     // Check if the Block is deleted
     bool deleted;
     // "level" tracks the the level number when the Block is created
@@ -18,10 +19,11 @@ protected:
     // Cell *[4] getCells() = 0;
 
 public:
-    Block(const int level, const int numCells): level{level}, numCells{numCells}{
+    Block(const int level, const int numCells, Observer* obs): level{level}, numCells{numCells}{
         deleted = false;
+        attach(obs);
     }
-    void notify();
+    void notify() override;
     // checkExist() returns the boolean value of whether the Block exists on the Board
     bool checkExist();
     // getLevel() returns the level of the the Block when it's been created

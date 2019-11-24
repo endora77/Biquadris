@@ -2,8 +2,6 @@
 #include "Enums.h"
 #include <utility>
 
-void Block::notify();
-
 // calcPosition(MoveType type, int num) returns the pointer to the position of the first cell
 // after perform the move for "num" cells
 std::pair<int, int> *Block::calcPosition(const MoveType type, const int num) const{
@@ -17,11 +15,18 @@ std::pair<int, int> *Block::calcPosition(const MoveType type, const int num) con
 }
 
 //Finished Below********************************************************************************************
-// checkExist() returns the boolean value of whether the Block exists on the Board
+//I don't know w this is wrong
+void Block::notify(){
+    if(!checkExist()){
+        deleted = true;
+        notifyObservers();
+    }
+}
+
 bool Block::checkExist() {
     int i = 0;
     for(auto&c : cells){
-        if(c.getState) break;
+        if(c.getState()) break;
         i++;
     }
     if (i == numCells) return false;

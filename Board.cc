@@ -153,5 +153,6 @@ bool Board::checkTop(){
 }
 
 void Board::notify(Subject* s){
-    tempScore += s.getScore();
+    tempScore += s.getState();
+    for(auto a = cells.begin(); a != cells.end; )
 }
