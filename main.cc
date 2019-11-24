@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     // run commands several times (it needed)
     for (int t = 0; t < times; ++t){
-      	
+      
       if (cmd == "left"){
 
       } else if (cmd == "right"){
