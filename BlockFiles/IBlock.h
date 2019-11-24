@@ -9,9 +9,8 @@
 
 class IBlock: public Block{
 public:
-    IBlock(const int row, const int col, const int level);
+    IBlock(const int row, const int col, const int level, Observer* obs);
 
-    std::vector<Cell>& getCells() override;
 };
 
 #endif

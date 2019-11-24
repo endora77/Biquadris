@@ -10,9 +10,7 @@
 
 class ZBlock: public Block{
 public:
-    ZBlock(const int row, const int col, const int level);
-
-    std::vector<Cell>& getCells() override;
+    ZBlock(const int row, const int col, const int level, Observer* obs);
 };
 
 #endif

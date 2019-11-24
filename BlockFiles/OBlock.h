@@ -10,9 +10,8 @@
 
 class OBlock: public Block{
 public:
-    OBlock(const int row, const int col, const int level);
+    OBlock(const int row, const int col, const int level, Observer* obs);
 
-    std::vector<Cell>& getCells() override;
 };
 
 #endif

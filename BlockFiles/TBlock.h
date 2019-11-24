@@ -10,9 +10,8 @@
 
 class TBlock: public Block{
 public:
-    TBlock(const int row, const int col, const int level);
+    TBlock(const int row, const int col, const int level, Observer* obs);
 
-    std::vector<Cell>& getCells() override;
 };
 
 #endif

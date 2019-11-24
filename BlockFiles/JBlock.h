@@ -10,9 +10,8 @@
 
 class JBlock: public Block{
 public:
-    JBlock(const int row, const int col, const int level);
+    JBlock(const int row, const int col, const int level, Observer* obs);
 
-    std::vector<Cell>& getCells() override;
 };
 
 #endif
