@@ -1,5 +1,5 @@
 #include "Board.h"
-
+using namespace std;
 //Throws an error
 void Board::setLevel(int l){
     delete level;
@@ -41,7 +41,7 @@ void Board::getNextBlock(){
     blocks.push_back(currentBlock);
 }
 
-bool Board::checkPosition(const pair<int, int> *pos){
+bool Board::checkPosition(const std::pair<int, int> *pos) const{
     for( int i = 0; i < 4; i++){
         if(cells[pos[i].first][pos[i].second]) return false;
     }
@@ -50,28 +50,28 @@ bool Board::checkPosition(const pair<int, int> *pos){
 
 void Board::down(const int i){
     //Not finished, should use unique pointer here or vector
-    pair<int, int> *pos = currentBlock->calculatePosition(moveDown, i);
+    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveDown, i);
     if(Board::checkPosition(pos)) level->down(*currentBlock, i);
 }
 
 void Board::left(const int i){
-    pair<int, int> *pos = currentBlock->calculatePosition(moveLeft, i);
+    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveLeft, i);
     if(Board::checkPosition(pos)) currentBlock->left(i);
 }
 
 void Board::right(const int i){
-    pair<int, int> *pos = currentBlock->calculatePosition(moveRight, i);
+    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveRight, i);
     if(Board::checkPosition(pos)) currentBlock->right(i);
 }
 
 void Board::rotateClockwise(const int i){
-    pair<int, int> *pos = currentBlock->calculatePosition(moveClockwise, i);
+    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveClockwise, i);
     if(Board::checkPosition(pos)) 
         currentBlock = new Clockwise{*currentBlock};
 }
 
 void Board::rotateCounterClockwise(const int i){
-    pair<int, int> *pos = currentBlock->calculatePosition(moveCounterClockwise, i);
+    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveCounterClockwise, i);
     if(Board::checkPosition(pos))
      currentBlock = new rotateCounterClockwise{*currentBlock};
 }
@@ -79,27 +79,26 @@ void Board::rotateCounterClockwise(const int i){
 //return the row number of the first cell that is empty in this column
 int Board::checkColBot(int col){
     if(col < gridW){
-        int i = girdH - 1;
+        int i = gridH - 1;
         while(i >= 0 && grid[i][col] != nullptr) i --;
         return i;
     }
     throw "In checkColBot(): col number out of range";
 }
 
-void Board::drop(const int i){
-    const Cell* c = currentBlock->getCells();
+void Board::drop(){
+    vector<Cell>& c = currentBlock->getCells();
     int lowest = gridH;
     int touchedCell = 0;
     for(int i = 0; i < 4; i++){
-        pair<int, int>* pos = cells[i].getPosition()
+        pair<int, int> pos = c[i].getPosition();
         int temp = checkColBot(pos.second);
         if(temp < lowest){
             touchedCell = i;
             lowest = temp;
         } 
     }
-    pair<int, int> cells = currentBlock->getCells();
-    int shift = lowest - cells[i].first;
+    int shift = lowest - c[i].getPosition().first;
     currentBlock->down(shift);
 }
 
@@ -115,8 +114,8 @@ void Board::checkFilledLines(){
         }
         if(emptyLine) break;
         if(filled) {
-            successful = true;
-            deleteLine(i);
+            numDeleted ++;
+            deleteRow(i);
         }
     }
     if(!numDeleted) countBlocks ++;
@@ -140,8 +139,8 @@ void Board::addStar(){
 
 void Board::deleteRow(int row){
     for(int i = 0; i < gridW; i++){
-        grid[row][i].setPosition(-1, -1);
-        grid[row][i].notifyObservers();
+        grid[row][i]->setPosition(-1, -1);
+        grid[row][i]->notifyObservers();
     }
 }
 
@@ -153,6 +152,6 @@ bool Board::checkTop(){
 }
 
 void Board::notify(Subject* s){
-    tempScore += s.getState();
-    for(auto a = cells.begin(); a != cells.end; )
+    tempScore += s->getState();
+    for(auto a = blocks.begin(); a != blocks.end(); )
 }
