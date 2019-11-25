@@ -33,7 +33,7 @@ class Board: public Observer{
     std::unique_ptr<Restriction>* restriction;
 
     void newBlock(const BlockType type, const int row, const int col);
-    bool checkPosition(const std::pair<int, int> *pos) const;
+    bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
     
 //return the row number of the first cell that is empty in this column
     int checkColBot(int col);

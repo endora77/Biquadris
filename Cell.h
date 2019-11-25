@@ -13,11 +13,7 @@ public:
     // Constructor
     Cell(int row, int column, BlockType type, Block* block);
 
-    void setPosition(const int row, const int col){
-        position.first = row;
-        position.second = col;
-        notifyObservers();
-    }
+    void setPosition(const int row, const int col);
     // moveDown() moves the cell down
     void moveDown();
     // moveLeft() moves the cell left

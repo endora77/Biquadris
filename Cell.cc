@@ -35,3 +35,8 @@ void Cell::moveLeft() {
 void Cell::moveRight() {
     position.second += 1;
 }
+
+void Cell::setPosition(const int row, const int col){
+    position.first = row;
+    position.second = col;
+}

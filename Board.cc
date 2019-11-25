@@ -52,7 +52,7 @@ void Board::getNextBlock(){
     blocks.push_back(currentBlock);
 }
 
-bool Board::checkPosition(const std::pair<int, int> *pos) const{
+bool Board::checkPosition(const unique_ptr<pair<int, int>[]>& pos) const{
     for( int i = 0; i < 4; i++){
         if(grid[pos[i].first][pos[i].second]) return false;
     }
@@ -60,30 +60,30 @@ bool Board::checkPosition(const std::pair<int, int> *pos) const{
 }
 
 void Board::down(const int i){
-    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveDown, i);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown, i);
     if(Board::checkPosition(pos)) level->down(*currentBlock, i); 
 }
 
 void Board::left(const int i){
-    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveLeft, i);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft, i);
     if(Board::checkPosition(pos)) currentBlock->left(i);
     if(restriction->specialHeavy) down(1);
 }
 
 void Board::right(const int i){
-    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveRight, i);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight, i);
     if(Board::checkPosition(pos)) currentBlock->right(i);
     if(restriction->specialHeavy) down(1);
 }
 
 void Board::rotateClockwise(const int i){
-    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveClockwise, i);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise, i);
     if(Board::checkPosition(pos)) 
         currentBlock = new Clockwise{*currentBlock};
 }
 
 void Board::rotateCounterClockwise(const int i){
-    pair<int, int> *pos = currentBlock->calcPosition(MoveType::moveCounterClockwise, i);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveCounterClockwise, i);
     if(Board::checkPosition(pos))
      currentBlock = new rotateCounterClockwise{*currentBlock};
 }
