@@ -3,8 +3,16 @@
 #include <cstdlib>
 
 // Constructor
-LevelOne::LevelOne(unsigned int seed = 0) : seed{seed}, addStar{false}, applyHeavy{false} {
+LevelOne::LevelOne(unsigned int seed = 0) : seed{seed}, star{false}, heavy{false} {
     srand(seed);
+}
+
+bool LevelOne::addStar() {
+    return star;
+}
+
+bool LevelOne::applyHeavy() {
+    return heavy;
 }
 
 BlockType LevelOne::nextBlock() {

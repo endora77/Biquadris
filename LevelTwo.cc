@@ -3,8 +3,16 @@
 #include <cstdlib>
 
 // Constructor
-LevelTwo::LevelTwo(unsigned int seed = 0) : seed{seed}, addStar{false}, applyHeavy{false} {
+LevelTwo::LevelTwo(unsigned int seed = 0) : seed{seed}, star{false}, heavy{false} {
     srand(seed);
+}
+
+bool LevelTwo::addStar() {
+    return star;
+}
+
+bool LevelTwo::applyHeavy() {
+    return heavy;
 }
 
 // Override the nextBlock() method in the base class to select the shape of next Block dropped

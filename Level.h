@@ -5,11 +5,12 @@
 class Level {
     unsigned int seed;
     // Tell the Board whether addStar effect will apply in this level
-    const bool addStar;
+    const bool star;
     // Tell the Board whether heavy effect will apply when Block rotates in this level
-    const bool applyHeavy;
+    const bool heavy;
 public:
-    virtual BlockType nextBlock() = 0;
+    virtual bool addStar() = 0;
+    virtual bool applyHeavy() = 0;
 };
 
 

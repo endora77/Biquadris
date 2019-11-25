@@ -3,8 +3,16 @@
 #include <cstdlib>
 
 // Constructor
-LevelThree::LevelThree(unsigned int seed = 0) : seed{seed}, addStar{false}, applyHeavy{true} {
+LevelThree::LevelThree(unsigned int seed = 0) : seed{seed}, star{false}, heavy{true} {
     srand(seed);
+}
+
+bool LevelThree::addStar() {
+    return star;
+}
+
+bool LevelThree::applyHeavy() {
+    return heavy;
 }
 
 BlockType LevelThree::nextBlock() {

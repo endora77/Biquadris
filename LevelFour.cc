@@ -2,8 +2,16 @@
 #include "Enums.h"
 #include <cstdlib>
 
-LevelFour::LevelFour(unsigned int seed = 0) : seed{seed}, addStar{true}, applyHeavy{true} {
+LevelFour::LevelFour(unsigned int seed = 0) : seed{seed}, star{true}, heavy{true} {
     srand(seed);
+}
+
+bool LevelFour::addStar() {
+    return star;
+}
+
+bool LevelFour::applyHeavy() {
+    return heavy;
 }
 
 BlockType LevelFour::nextBlock() {
