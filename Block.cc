@@ -3,15 +3,25 @@
 #include <utility>
 
 // calcPosition(MoveType type, int num) returns the pointer to the position of the first cell
-// after perform the move
-std::pair<int, int> *Block::calcPosition(const MoveType type) const{
-    if (type == MoveType::moveDown) {
-        return make_
+// after perform the move for "num" cells
+std::pair<int, int> *Block::calcPosition(const MoveType type, const int num) const{
+    switch(type){
+        case MoveType::moveDown: {
+            break;
+        }
+        case MoveType::moveLeft: {
+            break;
+        }
+        case MoveType::moveRight: {
+            break;
+        }
+        case MoveType::moveClockwise: {
+            break;
+        }
+        default{
+            
+        }
     }
-    if (type == MoveType::moveLeft) {}
-    if (type == MoveType::moveRight) {}
-    if (type == MoveType::moveClockwise) {}
-    if (type == MoveType::moveCounterClockwise) {}
 }
 
 //Finished Below********************************************************************************************
