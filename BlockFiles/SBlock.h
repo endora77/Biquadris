@@ -11,7 +11,7 @@
 class SBlock: public Block{
 public:
     SBlock(const int row, const int col, const int level, Observer* obs);
-
+    ~SBlock()override{}
 };
 
 #endif

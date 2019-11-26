@@ -11,7 +11,7 @@
 class TBlock: public Block{
 public:
     TBlock(const int row, const int col, const int level, Observer* obs);
-
+    ~TBlock()override{}
 };
 
 #endif

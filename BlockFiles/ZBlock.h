@@ -11,6 +11,7 @@
 class ZBlock: public Block{
 public:
     ZBlock(const int row, const int col, const int level, Observer* obs);
+    ~ZBlock()override{}
 };
 
 #endif

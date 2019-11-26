@@ -11,7 +11,7 @@
 class LBlock: public Block{
 public:
     LBlock(const int row, const int col, const int level, Observer* obs);
-
+    ~LBlock()override{}
 };
 
 #endif

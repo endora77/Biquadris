@@ -11,6 +11,7 @@
 class StarBlock: public Block{
 public:
     StarBlock(const int row, const int col, const int level, Observer* obs);
+    ~StarBlock()override{}
 };
 
 #endif

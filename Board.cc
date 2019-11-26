@@ -1,91 +1,11 @@
 #include "Board.h"
 using namespace std;
-//Blind is not finished
-//call notifyObservers(); whenever needs refrees
-//Throws an error
-void Board::setLevel(const int l, const BlockType type, int seed){
-    delete level;
-    switch(l){
-        case 0:{
-            level = new LevelZero();
-            nextType = level->nextBlock(blockFile);
-            break;
-        }
-        case 1:{
-            level = new LevelOne(seed);
-            nextType = level->nextBlock();
-            break;
-        }
-        case 2:{
-            level = new LevelTwo(seed);
-            nextType = level->nextBlock();
-            break;
-        }
-        case 3:{
-            level = new LevelThree(seed);
-            nextType = level->nextBlock();
-            break;
-        }
-        case 4:{
-            level = new LevelFour(seed);
-            nextType = level->nextBlock();
-            break;
-        }
-        default: throw "Invalid level";
-    }
-}
-
-void Board::newBlock(const BlockType type, const int row, const int col){
-    switch(type):{
-        case typeZ: return new ZBlock{row, col, level};
-        ...
-        //Not finished, and every other blocks
-    }
-}
-
-void Board::getNextBlock(){
-    tempScore = 0;
-    BlockType type;
-    if(restriction->forced) type = restriction->forcedType;
-    else type = nextType;
-    currentBlock = newBlock{type, 0, 3};
-    blocks.push_back(currentBlock);
-}
 
 bool Board::checkPosition(const unique_ptr<pair<int, int>[]>& pos) const{
     for( int i = 0; i < 4; i++){
         if(grid[pos[i].first][pos[i].second]) return false;
     }
     return true;
-}
-
-void Board::down(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown, i);
-    if(Board::checkPosition(pos)) level->down(*currentBlock, i); 
-}
-
-void Board::left(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft, i);
-    if(Board::checkPosition(pos)) currentBlock->left(i);
-    if(restriction->specialHeavy) down(1);
-}
-
-void Board::right(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight, i);
-    if(Board::checkPosition(pos)) currentBlock->right(i);
-    if(restriction->specialHeavy) down(1);
-}
-
-void Board::rotateClockwise(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise, i);
-    if(Board::checkPosition(pos)) 
-        currentBlock = new Clockwise{*currentBlock};
-}
-
-void Board::rotateCounterClockwise(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveCounterClockwise, i);
-    if(Board::checkPosition(pos))
-     currentBlock = new rotateCounterClockwise{*currentBlock};
 }
 
 //return the row number of the first cell that is empty in this column
@@ -97,23 +17,6 @@ int Board::checkColBot(int col){
     }
     throw "In checkColBot(): col number out of range";
 }
-
-void Board::drop(){
-    vector<Cell>& c = currentBlock->getCells();
-    int lowest = gridH;
-    int touchedCell = 0;
-    for(int i = 0; i < 4; i++){
-        pair<int, int> pos = c[i].getPosition();
-        int temp = checkColBot(pos.second);
-        if(temp < lowest){
-            touchedCell = i;
-            lowest = temp;
-        } 
-    }
-    int shift = lowest - c[i].getPosition().first;
-    currentBlock->down(shift);
-}
-
 
 void Board::checkFilledLines(){
     int numDeleted  = 0;
@@ -133,7 +36,7 @@ void Board::checkFilledLines(){
     if(!numDeleted) countBlocks ++;
     else countBlocks = 0;
     if(5 == countBlocks){
-        if(level->addStar) addStar();
+        if(level->addStar()) addStar();
         countBlocks = 0;
     }
     tempScore += numDeleted;

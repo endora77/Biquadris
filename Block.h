@@ -42,6 +42,9 @@ public:
     std::vector<Cell>& getCells();
     static void Block::getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
     virtual ~Block() = 0;
+    int getState() const override{
+        return deleted;
+    }
 };
 
 

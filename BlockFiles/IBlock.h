@@ -10,7 +10,7 @@
 class IBlock: public Block{
 public:
     IBlock(const int row, const int col, const int level, Observer* obs);
-
+    ~IBlock()override{}
 };
 
 #endif

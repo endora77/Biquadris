@@ -11,7 +11,7 @@
 class OBlock: public Block{
 public:
     OBlock(const int row, const int col, const int level, Observer* obs);
-
+    ~OBlock()override{}
 };
 
 #endif

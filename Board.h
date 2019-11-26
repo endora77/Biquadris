@@ -4,8 +4,6 @@
 #include "Cell.h"
 #include <vector>
 #include "TextDisplay.h"
-//#include "Restriction.h"
-#include "Level.h"
 #include "Enums.h"
 #include <string>
 #include <fstream>
@@ -26,13 +24,10 @@ class Board: public Observer{
     int countBlocks;
     std::vector<Block*> blocks;
     Block* currentBlock;
-    Level* level;
     int totalScore;
     int tempScore;
     BlockType nextType;
-    std::unique_ptr<Restriction>* restriction;
 
-    void newBlock(const BlockType type, const int row, const int col);
     bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
     
 //return the row number of the first cell that is empty in this column
@@ -45,14 +40,6 @@ class Board: public Observer{
     void draw();
     
 public:
-    void setLevel(const int l, const BlockType type, int seed);
-    void getNextBlock();
-    void down(const int i);
-    void left(const int i);
-    void right(const int i);
-    void rotateClockwise(const int i);
-    void rotateCounterClockwise(const int i);
-    void drop();
 
     Board(const int height, const int width, const vector<Display>* displays, const string* fileName):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}{
