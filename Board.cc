@@ -1,5 +1,18 @@
 #include "Board.h"
 using namespace std;
+void Board::newBlock(const BlockType type, const int row, const int col){
+    switch(type){
+        case BlockType::ZBlock: blocks.emplace_back(make_unique<Block>(ZBlock{row, col, level->level, this}));
+        case BlockType::LBlock: blocks.emplace_back(make_unique<Block>(LBlock{row, col, level->level, this}));
+        case BlockType::IBlock: blocks.emplace_back(make_unique<Block>(IBlock{row, col, level->level, this}));
+        case BlockType::JBlock: blocks.emplace_back(make_unique<Block>(JBlock{row, col, level->level, this}));
+        case BlockType::OBlock: blocks.emplace_back(make_unique<Block>(OBlock{row, col, level->level, this}));
+        case BlockType::SBlock: blocks.emplace_back(make_unique<Block>(SBlock{row, col, level->level, this}));
+        case BlockType::TBlock: blocks.emplace_back(make_unique<Block>(TBlock{row, col, level->level, this}));
+        case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
+    }
+    currentBlock = blocks.end()->get();
+}
 
 bool Board::checkPosition(const unique_ptr<pair<int, int>[]>& pos) const{
     for( int i = 0; i < 4; i++){

@@ -1,46 +1,28 @@
 #include "player.h"
 using namespace std;
 
-void Player::newBlock(const BlockType type, const int row, const int col){
-    switch(type){
-        case BlockType::ZBlock: return new ZBlock{row, col, level->level, this};
-        case BlockType::LBlock: return new LBlock{row, col, level->level, this};
-        case BlockType::IBlock: return new IBlock{row, col, level->level, this};
-        case BlockType::JBlock: return new JBlock{row, col, level->level, this};
-        case BlockType::OBlock: return new OBlock{row, col, level->level, this};
-        case BlockType::SBlock: return new SBlock{row, col, level->level, this};
-        case BlockType::TBlock: return new TBlock{row, col, level->level, this};
-        case BlockType::StarBlock: return new StarBlock{row, col, level->level, this};
-    }
-}
-
 //Throws an error
-void Player::setLevel(const int l, const BlockType type, int seed){
+void Player::setLevel(const int l, int seed){
     delete level;
     switch(l){
         case 0:{
             level = new LevelZero{};
-            nextType = level->nextBlock(blockFile);
             break;
         }
         case 1:{
             level = new LevelOne{seed};
-            nextType = level->nextBlock();
             break;
         }
         case 2:{
             level = new LevelTwo{seed};
-            nextType = level->nextBlock();
             break;
         }
         case 3:{
             level = new LevelThree{seed};
-            nextType = level->nextBlock();
             break;
         }
         case 4:{
             level = new LevelFour{seed};
-            nextType = level->nextBlock();
             break;
         }
         default: throw "Invalid level";
@@ -49,9 +31,9 @@ void Player::setLevel(const int l, const BlockType type, int seed){
 
 void Player::getNextBlock(){
     BlockType type;
-    if(restriction->forced) type = restriction->forcedType;
-    else type = nextType;
-    currentBlock = newBlock{type, 0, 3};
+    if(forced) type = forcedType;
+    else type = level->nextBlock();
+    board.newBlock{type, 0, 3};
     blocks.push_back(currentBlock);
 }
 void Player::down(const int i){

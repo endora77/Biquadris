@@ -7,7 +7,14 @@
 #include "Enums.h"
 #include <string>
 #include <fstream>
-
+#include "BlockFiles/ZBlock.h"
+#include "BlockFiles/LBlock.h"
+#include "BlockFiles/IBlock.h"
+#include "BlockFiles/JBlock.h"
+#include "BlockFiles/OBlock.h"
+#include "BlockFiles/SBlock.h"
+#include "BlockFiles/TBlock.h"
+#include "BlockFiles/StarBlock.h"
 class Board: public Observer{
     std::ifstream blockFile;
     TextDisplay textdisplay;
@@ -41,6 +48,7 @@ public:
     }
 
 //return the row number of the first cell that is empty in this column
+    void newBlock(const BlockType type, const int row, const int col);
     int checkColBot(int col);
     bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
     void checkFilledLines();
