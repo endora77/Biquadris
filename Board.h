@@ -7,12 +7,6 @@
 #include "Enums.h"
 #include <string>
 #include <fstream>
-struct Restriction{
-    const bool forced;
-    const BlockType forcedType;
-    const bool specialHeavy;
-    const bool blind;
-};
 
 class Board: public Observer{
     std::ifstream blockFile;
@@ -21,23 +15,13 @@ class Board: public Observer{
     const int gridH;
     const int gridW;
     std::vector<std::vector<Cell*>> grid;
-    int countBlocks;
-    std::vector<Block*> blocks;
+    std::vector<std::unique_ptr<Block>> blocks;
     Block* currentBlock;
+
+    int countBlocks;
     int totalScore;
     int tempScore;
     BlockType nextType;
-
-    bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
-    
-//return the row number of the first cell that is empty in this column
-    int checkColBot(int col);
-    void checkFilledLines();
-    void addStar();
-    void deleteRow(int row);
-    bool checkTop();
-    void notify(Subject* s);
-    void draw();
     
 public:
 
@@ -55,11 +39,16 @@ public:
         blockFile.close();
         for(auto &b : blocks) delete(b);
     }
+
+//return the row number of the first cell that is empty in this column
+    int checkColBot(int col);
+    bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
+    void checkFilledLines();
+    void addStar();
+    void deleteRow(int row);
+    bool checkTop();
+    void notify(Subject* s);
+    void draw();
 };
-
-
-
-
-
 
 #endif

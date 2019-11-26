@@ -48,7 +48,6 @@ void Player::setLevel(const int l, const BlockType type, int seed){
 }
 
 void Player::getNextBlock(){
-    tempScore = 0;
     BlockType type;
     if(restriction->forced) type = restriction->forcedType;
     else type = nextType;

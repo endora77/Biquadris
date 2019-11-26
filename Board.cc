@@ -47,8 +47,7 @@ void Board::checkFilledLines(){
 void Board::addStar(){
     int mid = gridW/2;
     int lowest = checkColBot(mid);
-    Block* star = new starBlock{};
-    blocks.push_back(star);
+    blocks.push_back(new starBlock{});
     grid[lowest][mid] = star;
 }
 
@@ -68,6 +67,7 @@ bool Board::checkTop(){
 
 void Board::notify(Subject* s){
     tempScore += s->getState();
+    s->get
 }
 
 

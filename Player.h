@@ -12,6 +12,12 @@
 #include "BlockFiles/StarBlock.h"
 #include "Level.h"
 #include <string>
+struct Restriction{
+    const bool forced;
+    const BlockType forcedType;
+    const bool specialHeavy;
+    const bool blind;
+};
 
 class Player{
     std::string name;
