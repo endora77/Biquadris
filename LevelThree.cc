@@ -1,9 +1,10 @@
 #include "LevelThree.h"
 #include "Enums.h"
 #include <cstdlib>
+#include <fstream>
 
 // Constructor
-LevelThree::LevelThree(unsigned int seed = 0) : seed{seed}, star{false}, heavy{true} {
+LevelThree::LevelThree(unsigned int seed = 0) : level{3}, seed{seed}, star{false}, heavy{true} {
     srand(seed);
 }
 
@@ -33,3 +34,6 @@ BlockType LevelThree::nextBlock() {
         return BlockType::JBlock;
     }
 }
+
+// nextBlock(std::ifstream &in) does nothing in LevelThree
+BlockType LevelThree::nextBlock(std::ifstream &in) {}

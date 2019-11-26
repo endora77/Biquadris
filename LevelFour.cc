@@ -1,8 +1,9 @@
 #include "LevelFour.h"
 #include "Enums.h"
 #include <cstdlib>
+#include <fstream>
 
-LevelFour::LevelFour(unsigned int seed = 0) : seed{seed}, star{true}, heavy{true} {
+LevelFour::LevelFour(unsigned int seed = 0) : level{4}, seed{seed}, star{true}, heavy{true} {
     srand(seed);
 }
 
@@ -32,3 +33,6 @@ BlockType LevelFour::nextBlock() {
         return BlockType::JBlock;
     }
 }
+
+// nextBlock(std::ifstream &in) does nothing in LevelFour
+BlockType LevelFour::nextBlock(std::ifstream &in) {}

@@ -5,7 +5,7 @@
 using namespace std;
 
 // Constructor
-LevelZero::LevelZero() : seed{0}, star{false}, heavy{false} {}
+LevelZero::LevelZero() : level{0}, seed{0}, star{false}, heavy{false} {}
 
 // nextBlock() reads a string from an ifstream and returns the BlockType of the next block
 BlockType LevelZero::nextBlock(ifstream &in) {
@@ -34,4 +34,7 @@ BlockType LevelZero::nextBlock(ifstream &in) {
         }
     }
 }
+
+// nextBlock() does nothing in LevelZero
+BlockType LevelZero::nextBlock() {}
 

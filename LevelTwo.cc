@@ -1,9 +1,10 @@
 #include "LevelTwo.h"
 #include "Enums.h"
 #include <cstdlib>
+#include <fstream>
 
 // Constructor
-LevelTwo::LevelTwo(unsigned int seed = 0) : seed{seed}, star{false}, heavy{false} {
+LevelTwo::LevelTwo(unsigned int seed = 0) : level{2}, seed{seed}, star{false}, heavy{false} {
     srand(seed);
 }
 
@@ -34,3 +35,6 @@ BlockType LevelTwo::nextBlock() {
         return BlockType::ZBlock;
     }
 }
+
+// nextBlock(std::ifstream &in) does nothing in LevelTwo
+BlockType LevelTwo::nextBlock(std::ifstream &in) {}

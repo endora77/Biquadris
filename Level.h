@@ -1,6 +1,6 @@
 #ifndef BIQUADRIS_LEVEL_H
 #define BIQUADRIS_LEVEL_H
-
+#include <fstream>
 
 class Level {
     unsigned int seed;
@@ -9,8 +9,11 @@ class Level {
     // Tell the Board whether heavy effect will apply when Block rotates in this level
     const bool heavy;
 public:
+    const int level;
     virtual bool addStar() = 0;
     virtual bool applyHeavy() = 0;
+    virtual BlockType nextBlock(std::ifstream &in);
+    virtual BlockType nextBlock();
 };
 
 
