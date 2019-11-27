@@ -3,6 +3,7 @@
 #include "Observer.h"
 #include "Cell.h"
 #include <vector>
+#include "Display.h"
 #include "TextDisplay.h"
 #include "Enums.h"
 #include <string>
@@ -17,7 +18,6 @@
 #include "BlockFiles/StarBlock.h"
 class Board: public Observer{
     std::ifstream blockFile;
-    TextDisplay textdisplay;
 
     const int gridH;
     const int gridW;
@@ -36,7 +36,7 @@ public:
     friend class TextDisplay;
     Block* currentBlock;
 
-    Board(const int height, const int width, std::unique_ptr<Level>& level, TextDisplay* displays, 
+    Board(std::unique_ptr<Level>& level, const std::vector<Display>& displays, const int height = 15, const int width = 11,
             const string* fileName = nullptr):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
 
@@ -63,6 +63,9 @@ public:
     bool checkTop();
     void notify(Subject* s);
     void draw();
+    void restart();
+    void eraseBlock(Block* block);
+    void addBlock(Block* block);
 };
 
 #endif

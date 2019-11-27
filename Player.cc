@@ -30,38 +30,60 @@ void Player::setLevel(const int l, int seed){
 
 void Player::getNextBlock(){
     BlockType type;
-    if(forced) type = forcedType;
+    if(restriction == Restriction::forced) type = forcedType;
     else type = level->nextBlock();
     currentBlock = board->newBlock(type, 0, 3);
 }
 
 void Player::down(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
-    if(board->checkPosition(pos)) currentBlock->down();
+    if(board->checkPosition(pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->down();
+        board->addBlock(currentBlock);
+        if(restriction == Restriction::specialHeavy) down();
+    } 
 }
 
 void Player::left(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft);
-    if(board->checkPosition(pos)) currentBlock->left();
-    if(specialHeavy) down();
+    if(board->checkPosition(pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->left();
+        board->addBlock(currentBlock);
+         if(restriction == Restriction::specialHeavy) down();
+    } 
+   
 }
 
 void Player::right(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight);
-    if(board->checkPosition(pos)) currentBlock->right();
-    if(specialHeavy) down();
+    if(board->checkPosition(pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->right();
+        board->addBlock(currentBlock);
+         if(restriction == Restriction::specialHeavy) down();
+    } 
 }
 
 void Player::rotateClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(board->checkPosition(pos)) currentBlock->Clockwise();
-    if(specialHeavy) down();
+    if(board->checkPosition(pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->Clockwise();
+        board->addBlock(currentBlock);
+         if(restriction == Restriction::specialHeavy) down();
+    } 
 }
 
 void Player::rotateCounterClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(board->checkPosition(pos)) currentBlock->counterClockwise();
-    if(specialHeavy) down();
+    if(board->checkPosition(pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->counterClockwise();
+        board->addBlock(currentBlock);
+         if(restriction == Restriction::specialHeavy) down();
+    } 
 }
 
 void Player::drop(){
@@ -88,10 +110,15 @@ int Player::getScore()const{
 string Player::getName()const{
     return name;
 }
-void Player::reset(){
-    
+
+void Player::restart(){
+    board->restart();
 }
-Player::Player(string name, Board *board): name{name}, board{new board} {}
+
+void Player::resetRestrictions(){
+    restriction = Restriction::noRestriction;
+}
+
 
 // void Player::forceOther(Player *otherPlayer, BlockType bType){
 //     // give otherPlayer's board the bType and let board changes the current

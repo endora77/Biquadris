@@ -60,6 +60,7 @@ void Board::deleteRow(int row){
         grid[row][i]->notifyObservers();
     }
 }
+
 void Board::addStar(){
     int mid = gridW/2;
     int lowest = checkColBot(mid);
@@ -80,4 +81,33 @@ Block* Board::newBlock(const BlockType type, const int row, const int col){
     }
     currentBlock = blocks.end()->get();
     return currentBlock;
+}
+
+void Board::restart(){
+    currentBlock = nullptr;
+    blocks.clear;
+    for(auto &a : grid){
+        for(auto &b: a){
+            b = nullptr;
+        }
+    }
+    countBlocks = 0;
+    totalScore = 0;
+    tempScore = 0;
+}
+
+void Board::eraseBlock(Block* block){
+    vector<Cell>& cells = block->getCells();
+    for(auto& c : cells){
+        pair<int, int> pos = c.getPosition();
+        grid[pos.first][pos.second] = nullptr;
+    }
+}
+
+void Board::addBlock(Block* block){
+    vector<Cell>& cells = block->getCells();
+    for(auto& c : cells){
+        pair<int, int> pos = c.getPosition();
+        grid[pos.first][pos.second] = &c;
+    }
 }

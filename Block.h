@@ -12,7 +12,7 @@ class Block: public Observer, public Subject{
     bool deleted;
     // "level" tracks the the level number when the Block is created
     int level;
-
+    static void Block::getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
 protected:
     std::vector<Cell> cells;
     const int numCells;
@@ -40,7 +40,7 @@ public:
     // calcPosition(MoveType type) returns the position of the block if certain move is done
     std::unique_ptr<std::pair<int, int>[]> calcPosition(const MoveType type);
     std::vector<Cell>& getCells();
-    static void Block::getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
+    
     virtual ~Block() = 0;
     int getState() const override{
         return deleted;
