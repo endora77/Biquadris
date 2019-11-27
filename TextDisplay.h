@@ -5,7 +5,7 @@
 #include <vector>
 #include "Display.h"
 
-class TextDisplay : public Display<char> {
+class TextDisplay : public Display {
     std::vector<std::vector<char>> theDisplay;
     const int row;
     const int column;
