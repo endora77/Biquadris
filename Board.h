@@ -21,6 +21,7 @@ class Board: public Observer{
     
     const int gridH;
     const int gridW;
+    
     std::vector<std::vector<Cell*>> grid;
     std::vector<std::unique_ptr<Block>> blocks;
 

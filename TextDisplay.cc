@@ -1,17 +1,20 @@
 #include "TextDisplay.h"
 #include <vector>
 #include <string>
-#Include "Enums.h"
+#include "Enums.h"
+#include "Board.h"
+
+using namespace std;
 
 // Constructor
-TextDisplay::TextDisplay() : row{row + 7}, column{row} {
+TextDisplay::TextDisplay(int row, int column) : row{row + 7}, column{column} {
     // Display the first two rows (Level, score)
     init("Level:");
     init("Score:");
     // Display the dashes
     vector<char> dashes;
     for (int i = 0; i < row; i += 1) {
-        row.emplace_back('-');
+        dashes.emplace_back('-');
     }
     theDisplay.emplace_back(dashes);
     // Initialize the board
@@ -51,7 +54,7 @@ void TextDisplay::init(string name) {
 
 // fillBlind() fills the column 3-9, and row 3-12 with "?" until the player drops a block
 void TextDisplay::fillBlind() {
-    for (int i = 3, i < 12; i += 1) {
+    for (int i = 3; i < 12; i += 1) {
         for (int j = 3; j < 9; j += 1) {
             theDisplay[i][j] = '?';
         }
@@ -104,7 +107,7 @@ void TextDisplay::fillTopInfo() {
 
 
 // fillNextBlock() displays the next Block shape in the bottom rows of the board
-void fillNextBlock() {
+void TextDisplay::fillNextBlock() {
     BlockType type = board.getNextBlock();
     if (type == BlockType::IBlock) {
         theDisplay[row + 6][0] = 'I';
@@ -150,7 +153,7 @@ void fillNextBlock() {
     }
 }
 
-std::ostream &TextDisplay::operator<<(std::ostream &out, const TextDisplay &td) {
+std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
     int row = td.theDisplay.size();
     for (int i = 0; i < row; i += 1) {
         int column = td.theDisplay[i].size();
