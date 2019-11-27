@@ -11,7 +11,7 @@ class Player{
     bool specialHeavy;
     bool forced;
     bool blind;
-    Level* level;
+    std::unique_ptr<Level> level;
 public:
     Board *board;
     void forceOther(Player *p, BlockType bType);

@@ -29,22 +29,20 @@ class Board: public Observer{
     int totalScore;
     int tempScore;
     BlockType nextType;
+    std::unique_ptr<Level>& level;
     
 public:
     Block* currentBlock;
-    Board(const int height, const int width, const vector<Display>* displays, const string* fileName):
-        gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}{
-        level = new LevelZero{};
-        nextType = level->nextType();
-        restriction->reset(new Restriction{false, BlockType::LBlock, false, false});
+    Board(const int height, const int width, const string* fileName, 
+            const vector<Display>* displays, std::unique_ptr<Level>& level):
+        gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
         blockFile.open(fileName->c_str());
+        nextType = level->nextBlock();
     }
  
     ~Board(){
-        delete level;
         delete currentBlock;
         blockFile.close();
-        for(auto &b : blocks) delete(b);
     }
 
 //return the row number of the first cell that is empty in this column
@@ -57,6 +55,9 @@ public:
     bool checkTop();
     void notify(Subject* s);
     void draw();
+    int getScore() const{
+        return totalScore;
+    }
 };
 
 #endif

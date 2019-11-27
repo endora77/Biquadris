@@ -1,37 +1,13 @@
 #include "Board.h"
 using namespace std;
-void Board::newBlock(const BlockType type, const int row, const int col){
-    switch(type){
-        case BlockType::ZBlock: blocks.emplace_back(make_unique<Block>(ZBlock{row, col, level->level, this}));
-        case BlockType::LBlock: blocks.emplace_back(make_unique<Block>(LBlock{row, col, level->level, this}));
-        case BlockType::IBlock: blocks.emplace_back(make_unique<Block>(IBlock{row, col, level->level, this}));
-        case BlockType::JBlock: blocks.emplace_back(make_unique<Block>(JBlock{row, col, level->level, this}));
-        case BlockType::OBlock: blocks.emplace_back(make_unique<Block>(OBlock{row, col, level->level, this}));
-        case BlockType::SBlock: blocks.emplace_back(make_unique<Block>(SBlock{row, col, level->level, this}));
-        case BlockType::TBlock: blocks.emplace_back(make_unique<Block>(TBlock{row, col, level->level, this}));
-        case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
-    }
-    currentBlock = blocks.end()->get();
-}
 
-bool Board::checkPosition(const unique_ptr<pair<int, int>[]>& pos) const{
-    for( int i = 0; i < 4; i++){
-        if(grid[pos[i].first][pos[i].second]) return false;
-    }
-    return true;
-}
-
-//return the row number of the first cell that is empty in this column
-int Board::checkColBot(int col){
-    if(col < gridW){
-        int i = gridH - 1;
-        while(i >= 0 && grid[i][col] != nullptr) i --;
-        return i;
-    }
-    throw "In checkColBot(): col number out of range";
+//Add score when a block is deleted:
+void Board::notify(Subject* s){
+    tempScore += s->getState();
 }
 
 void Board::checkFilledLines(){
+    tempScore = 0;;
     int numDeleted  = 0;
     for(int i = gridH - 1; i > 3; i++){
         bool filled = true;
@@ -54,33 +30,53 @@ void Board::checkFilledLines(){
     }
     tempScore += numDeleted;
     totalScore += tempScore*tempScore;
-    tempScore = 0;
 }
 
-void Board::addStar(){
-    int mid = gridW/2;
-    int lowest = checkColBot(mid);
-    blocks.push_back(new starBlock{});
-    grid[lowest][mid] = star;
-}
-
-void Board::deleteRow(int row){
-    for(int i = 0; i < gridW; i++){
-        grid[row][i]->setPosition(-1, -1);
-        grid[row][i]->notifyObservers();
+bool Board::checkPosition(const unique_ptr<pair<int, int>[]>& pos) const{
+    for( int i = 0; i < 4; i++){
+        if(grid[pos[i].first][pos[i].second]) return false;
     }
+    return true;
 }
 
+//return the row number of the first cell that is empty in this column
+int Board::checkColBot(int col){
+    if(col < gridW){
+        int i = gridH - 1;
+        while(i >= 0 && grid[i][col] != nullptr) i --;
+        return i;
+    }
+    throw "In checkColBot(): col number out of range";
+}
 bool Board::checkTop(){
     for(int i = 0; i < gridW; i++){
         if(grid[3][i]) return true;
     }
     return false;
 }
-
-void Board::notify(Subject* s){
-    tempScore += s->getState();
-    s->get
+void Board::deleteRow(int row){
+    for(int i = 0; i < gridW; i++){
+        grid[row][i]->setPosition(-1, -1);
+        grid[row][i]->notifyObservers();
+    }
+}
+void Board::addStar(){
+    int mid = gridW/2;
+    int lowest = checkColBot(mid);
+    blocks.emplace_back(make_unique<Block>(StarBlock{0, mid, level->level, this}));
+    grid[lowest][mid] = &(blocks[blocks.size - 1]->getCells()[0]);
 }
 
-
+void Board::newBlock(const BlockType type, const int row, const int col){
+    switch(type){
+        case BlockType::ZBlock: blocks.emplace_back(make_unique<Block>(ZBlock{row, col, level->level, this}));
+        case BlockType::LBlock: blocks.emplace_back(make_unique<Block>(LBlock{row, col, level->level, this}));
+        case BlockType::IBlock: blocks.emplace_back(make_unique<Block>(IBlock{row, col, level->level, this}));
+        case BlockType::JBlock: blocks.emplace_back(make_unique<Block>(JBlock{row, col, level->level, this}));
+        case BlockType::OBlock: blocks.emplace_back(make_unique<Block>(OBlock{row, col, level->level, this}));
+        case BlockType::SBlock: blocks.emplace_back(make_unique<Block>(SBlock{row, col, level->level, this}));
+        case BlockType::TBlock: blocks.emplace_back(make_unique<Block>(TBlock{row, col, level->level, this}));
+        case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
+    }
+    currentBlock = blocks.end()->get();
+}

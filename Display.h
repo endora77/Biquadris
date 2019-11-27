@@ -14,7 +14,6 @@ class Display {
     virtual void fillBlock() = 0;
     virtual void fillTopInfo() = 0;
     virtual void fillNextBlock() = 0;
-    virtual void notify() = 0;
 };
 
 

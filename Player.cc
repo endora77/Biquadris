@@ -1,28 +1,27 @@
-#include "player.h"
+#include "Player.h"
 using namespace std;
 
 //Throws an error
 void Player::setLevel(const int l, int seed){
-    delete level;
     switch(l){
         case 0:{
-            level = new LevelZero{};
+            level = make_unique<Level>(new LevelZero{});
             break;
         }
         case 1:{
-            level = new LevelOne{seed};
+            level = make_unique<Level>(new LevelOne{seed});
             break;
         }
         case 2:{
-            level = new LevelTwo{seed};
+            level = make_unique<Level>(new LevelTwo{seed});
             break;
         }
         case 3:{
-            level = new LevelThree{seed};
+            level = make_unique<Level>(new LevelThree{seed});
             break;
         }
         case 4:{
-            level = new LevelFour{seed};
+            level = make_unique<Level>(new LevelFour{seed});
             break;
         }
         default: throw "Invalid level";
