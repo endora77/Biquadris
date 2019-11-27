@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
       subCmd = "clockwise";
     } else if ((subCmd == "co") || (subCmd == "cou") || (subCmd == "coun") || (subCmd == "count") || (subCmd == "counte") ||
 		(subCmd == "counter") || (subCmd == "counterc") || (subCmd == "countercl") || (subCmd == "counterclo") ||
-		(subCmd == "countercloc") || (subCmd == "counterclock") || (subCmd == "counterclockw") || (subCmd == "counterclockwi")) ||
+		(subCmd == "countercloc") || (subCmd == "counterclock") || (subCmd == "counterclockw") || (subCmd == "counterclockwi") ||
 		(subCmd == "counterclockwis")) {
       subCmd = "counterclockwise";
     } else if ((subCmd == "dr") || (subCmd == "dro")) {
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
       subCmd = "random";
     } else if ((subCmd == "s") || (subCmd == "se") || (subCmd == "seq") || (subCmd == "sequ") || (subCmd == "seque") ||
 		(subCmd == "sequen") || (subCmd == "sequenc")) {
-      cubCmd = "sequence";
+      subCmd = "sequence";
     } else if ((subCmd == "re") || (subCmd == "res") || (subCmd == "rest") || (subCmd == "resta") || (subCmd == "restar")) {
       subCmd = "restart";
     }
