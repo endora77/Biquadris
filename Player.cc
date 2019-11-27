@@ -33,16 +33,16 @@ void Player::getNextBlock(){
     BlockType type;
     if(forced) type = forcedType;
     else type = level->nextBlock();
-    board.newBlock{type, 0, 3};
-    blocks.push_back(currentBlock);
+    board->newBlock(type, 0, 3);
 }
+
 void Player::down(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown, i);
-    if(Player::checkPosition(pos)) level->down(*currentBlock, i); 
+    unique_ptr<pair<int, int>[]> pos = board->currentBlock->calcPosition(MoveType::moveDown);
+    if(board->checkPosition(pos)) board->currentBlock->down();
 }
 
 void Player::left(const int i){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft, i);
+    unique_ptr<pair<int, int>[]> pos = board->currentBlock->calcPosition(MoveType::moveLeft, i);
     if(Player::checkPosition(pos)) currentBlock->left(i);
     if(restriction->specialHeavy) down(1);
 }

@@ -23,7 +23,6 @@ class Board: public Observer{
     const int gridW;
     std::vector<std::vector<Cell*>> grid;
     std::vector<std::unique_ptr<Block>> blocks;
-    Block* currentBlock;
 
     int countBlocks;
     int totalScore;
@@ -31,7 +30,7 @@ class Board: public Observer{
     BlockType nextType;
     
 public:
-
+    Block* currentBlock;
     Board(const int height, const int width, const vector<Display>* displays, const string* fileName):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}{
         level = new LevelZero{};
