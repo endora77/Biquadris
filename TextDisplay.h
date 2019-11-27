@@ -1,12 +1,11 @@
 #ifndef BIQUADRIS_TEXTDISPLAY_H
 #define BIQUADRIS_TEXTDISPLAY_H
-
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <vector>
 #include "Display.h"
 
-class TextDisplay : public Display {
+class TextDisplay : public Display<char> {
     std::vector<std::vector<char>> theDisplay;
     const int row;
     const int column;
@@ -14,7 +13,7 @@ public:
     // Constructor
     TextDisplay(int row = 15, int column = 11);
     // init(string name) is a helper function to initialize textdisplay of the board(level, score, next)
-    void init(string name) override;
+    void init(std::string name) override;
     // fillBlind() fills the column 3-9, and row 3-12 with "?" until the player drops a block
     void fillBlind() override;
     // fillBlock() fills the Block with it's corresponding letter (i.e. j for JBlock)

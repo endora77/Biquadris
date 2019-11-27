@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <fstream>
 
-LevelFour::LevelFour(unsigned int seed = 0) : level{4}, seed{seed}, star{true}, heavy{true} {
+LevelFour::LevelFour(unsigned int seed = 0) : Level(seed, true, true, 4) {
     srand(seed);
 }
 

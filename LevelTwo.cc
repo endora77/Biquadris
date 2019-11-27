@@ -4,7 +4,7 @@
 #include <fstream>
 
 // Constructor
-LevelTwo::LevelTwo(unsigned int seed = 0) : level{2}, seed{seed}, star{false}, heavy{false} {
+LevelTwo::LevelTwo(unsigned int seed = 0) : Level(seed, false, false, 2) {
     srand(seed);
 }
 

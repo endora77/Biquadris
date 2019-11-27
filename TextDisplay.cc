@@ -1,10 +1,10 @@
 #include "TextDisplay.h"
 #include <vector>
 #include <string>
-#Include "Enums.h"
+#include "Enums.h"
 
 // Constructor
-TextDisplay::TextDisplay() : row{row + 7}, column{row} {
+TextDisplay::TextDisplay():row{row + 7}, column{row} {
     // Display the first two rows (Level, score)
     init("Level:");
     init("Score:");
