@@ -67,7 +67,7 @@ void Board::addStar(){
     grid[lowest][mid] = &(blocks[blocks.size - 1]->getCells()[0]);
 }
 
-void Board::newBlock(const BlockType type, const int row, const int col){
+Block* Board::newBlock(const BlockType type, const int row, const int col){
     switch(type){
         case BlockType::ZBlock: blocks.emplace_back(make_unique<Block>(ZBlock{row, col, level->level, this}));
         case BlockType::LBlock: blocks.emplace_back(make_unique<Block>(LBlock{row, col, level->level, this}));
@@ -79,4 +79,5 @@ void Board::newBlock(const BlockType type, const int row, const int col){
         case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
     }
     currentBlock = blocks.end()->get();
+    return currentBlock;
 }

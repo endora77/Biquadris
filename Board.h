@@ -18,7 +18,7 @@
 class Board: public Observer{
     std::ifstream blockFile;
     TextDisplay textdisplay;
-    
+
     const int gridH;
     const int gridW;
     
@@ -32,12 +32,20 @@ class Board: public Observer{
     std::unique_ptr<Level>& level;
     
 public:
+    friend class Player;
+    friend class TextDisplay;
     Block* currentBlock;
-    Board(const int height, const int width, const string* fileName, 
-            const vector<Display>* displays, std::unique_ptr<Level>& level):
+
+    Board(const int height, const int width, std::unique_ptr<Level>& level, TextDisplay* displays, 
+            const string* fileName = nullptr):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
-        blockFile.open(fileName->c_str());
+
+        if(fileName) blockFile.open(fileName->c_str());
         nextType = level->nextBlock();
+
+        //Initialize grid to null
+        std::vector<Cell*> temp(gridW, nullptr);
+        for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
     }
  
     ~Board(){
@@ -46,18 +54,15 @@ public:
     }
 
 //return the row number of the first cell that is empty in this column
-    void newBlock(const BlockType type, const int row, const int col);
+    Block* newBlock(const BlockType type, const int row, const int col);
     int checkColBot(int col);
-    bool checkPosition(const unique_ptr<pair<int, int>[]>& pos) const;
+    bool checkPosition(const std::unique_ptr<std::pair<int, int>[]>& pos) const;
     void checkFilledLines();
     void addStar();
     void deleteRow(int row);
     bool checkTop();
     void notify(Subject* s);
     void draw();
-    int getScore() const{
-        return totalScore;
-    }
 };
 
 #endif

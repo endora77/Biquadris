@@ -3,7 +3,11 @@
 #include "board.h"
 #include "block.h"
 #include "Enums.h"
-#include "Level.h"
+#include "LevelZero.h"
+#include "LevelOne.h"
+#include "LevelTwo.h"
+#include "LevelThree.h"
+#include "LevelFour.h"
 #include <string>
 class Player{
     std::string name;
@@ -12,24 +16,26 @@ class Player{
     bool forced;
     bool blind;
     std::unique_ptr<Level> level;
+    Block* currentBlock;
 public:
     Board *board;
-    void forceOther(Player *p, BlockType bType);
-    void heavyOther(Player *p);
-    void blindOther(Player *p);
-    int getScore();
-    std::string getName();
-    void reset();
 
-    
+    std::string getName()const;
+    void reset();
+    int getScore() const;
+
     void setLevel(const int l, int seed);
     void getNextBlock();
-    void down(const int i);
-    void left(const int i);
-    void right(const int i);
-    void rotateClockwise(const int i);
-    void rotateCounterClockwise(const int i);
+    void down();
+    void left();
+    void right();
+    void rotateClockwise();
+    void rotateCounterClockwise();
     void drop();
+
+    // void forceOther(Player *p, BlockType bType);
+    // void heavyOther(Player *p);
+    // void blindOther(Player *p);
 };
 
 #endif
