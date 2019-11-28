@@ -6,6 +6,7 @@
 #include "Display.h"
 #include "TextDisplay.h"
 #include "Enums.h"
+#include "Level.h"
 #include <string>
 #include <fstream>
 #include "BlockFiles/ZBlock.h"

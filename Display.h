@@ -3,10 +3,9 @@
 #include <vector>
 #include <string>
 
-template<typename T>
 class Display {
-    Board *board;
-    std::vector<std::vector<T>> theDisplay;
+protected:
+    Game *game;
 
     // Methods
     virtual void init(std::string name) = 0;
