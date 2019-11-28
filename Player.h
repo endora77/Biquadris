@@ -9,9 +9,10 @@
 #include "LevelThree.h"
 #include "LevelFour.h"
 #include "Display.h"
+#include "Subject.h"
 #include <string>
-
-class Player{
+//Notify observers are all calle din the Game class
+class Player: public Subject{
     std::string name;
    
     std::unique_ptr<Level> level;
@@ -24,9 +25,12 @@ public:
     Restriction restriction;
     BlockType forcedType;
     std::unique_ptr<Board> board;
-    Player::Player(string name, const int level, std::vector<Display>& displays, 
+    Player::Player(std::string name, const int level, std::vector<Display*>& displays, 
         const int height = 15, const int width = 11, int seed = 0, std::string* file_name = nullptr): 
         name{name}{
+            for(auto& a : displays){
+                attach(a);
+            }
             setLevel(level, seed);
             currentLevel = level;
             board = std::make_unique<Board>(this->level, displays, file_name, height, width);
@@ -48,14 +52,18 @@ public:
     void rotateCounterClockwise();
     void drop();
     void levelUp(){
-        currentLevel++;
-        setLevel(currentLevel, seed);
+        if(currentLevel < 4){
+            currentLevel++;
+            setLevel(currentLevel, seed);
+        }else throw "Cannot levelup anymore.";
     }
     void levelDown(){
-        currentLevel--;
-        setLevel(currentLevel, seed);
+        if(currentLevel > 0){
+            currentLevel--;
+            setLevel(currentLevel, seed);
+        }else throw "Cannot leveldown anymore.";
     }
-    int getState(){
+    int getState()const override{
         return success;
     }
     int getLinesDeleted(){

@@ -46,7 +46,6 @@ int Board::checkColBot(int col){
         while(i >= 0 && grid[i][col] != nullptr) i --;
         return i;
     }
-    throw "In checkColBot(): col number out of range";
 }
 bool Board::checkTop(){
     for(int i = 0; i < gridW; i++){
@@ -64,7 +63,7 @@ void Board::deleteRow(int row){
 void Board::addStar(){
     int mid = gridW/2;
     int lowest = checkColBot(mid);
-    blocks.emplace_back(make_unique<Block>(StarBlock{0, mid, level->level, this}));
+    blocks.emplace_back(make_unique<Block>(StarBlock{0, mid, 0, this}));
     grid[lowest][mid] = &(blocks[blocks.size - 1]->getCells()[0]);
 }
 

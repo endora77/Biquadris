@@ -6,8 +6,8 @@
 std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type){
     std::unique_ptr<std::pair<int, int>[]> calculates(new std::pair<int, int>[numCells]);
     int i = 0;
-    for (auto it = cells.begin(); it != cells.end(); it++){
-        calculates[i] = it->getPosition();
+    for (auto& c: cells){
+        calculates[i] = c.getPosition();
         i++;
     }
     switch(type){

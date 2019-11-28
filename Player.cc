@@ -24,7 +24,6 @@ void Player::setLevel(const int l, int seed){
             level = make_unique<Level>(LevelFour{seed});
             break;
         }
-        default: throw "Invalid level";
     }
 }
 
@@ -41,8 +40,8 @@ void Player::down(){
         board->eraseBlock(currentBlock);
         currentBlock->down();
         board->addBlock(currentBlock);
-        if(restriction == Restriction::specialHeavy) down();
-    } 
+        if(level->applyHeavy()) down();
+    }
 }
 
 void Player::left(){
@@ -51,7 +50,11 @@ void Player::left(){
         board->eraseBlock(currentBlock);
         currentBlock->left();
         board->addBlock(currentBlock);
-         if(restriction == Restriction::specialHeavy) down();
+        if(level->applyHeavy()) down();
+        if(restriction == Restriction::specialHeavy){
+            down();
+            down();
+        }
     } 
    
 }
@@ -62,7 +65,11 @@ void Player::right(){
         board->eraseBlock(currentBlock);
         currentBlock->right();
         board->addBlock(currentBlock);
-         if(restriction == Restriction::specialHeavy) down();
+        if(level->applyHeavy()) down();
+        if(restriction == Restriction::specialHeavy){
+            down();
+            down();
+        }
     } 
 }
 
@@ -72,7 +79,7 @@ void Player::rotateClockwise(){
         board->eraseBlock(currentBlock);
         currentBlock->Clockwise();
         board->addBlock(currentBlock);
-         if(restriction == Restriction::specialHeavy) down();
+        if(level->applyHeavy()) down();
     } 
 }
 
@@ -82,8 +89,8 @@ void Player::rotateCounterClockwise(){
         board->eraseBlock(currentBlock);
         currentBlock->counterClockwise();
         board->addBlock(currentBlock);
-         if(restriction == Restriction::specialHeavy) down();
-    } 
+        if(level->applyHeavy()) down();
+    }
 }
 
 void Player::drop(){

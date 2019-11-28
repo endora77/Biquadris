@@ -15,17 +15,15 @@ public:
 
 private:
     void seperateCommand(const std::string cmd, std::string& subCmd, int& times){
-        times = 0;
-        subCmd = "";
-        
-        for (int i = 0; i < cmd.length(); ++i){
-            if ( isdigit(cmd[i]) ) {
-                subCmd += cmd[i];
-            } else {
-                restCmd = cmd.substr(i);
+        times = stoi(cmd);
+        std::string firstChar;
+        for (const char& c : cmd){
+            if(c < 48 || c > 57){
+                firstChar = c;
+                break;
             }
         }
-        times = stoi(subCmd);
+        subCmd = cmd.substr(cmd.find(firstChar));
     }
 
     type getSubCommand(const std::string subCmd){
