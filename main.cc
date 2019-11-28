@@ -65,7 +65,8 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-  Game g{p1, p2, seed, f1, f2, startlevel, h, w};
+  Game g;
+  g.Init(p1, p2, seed, f1, f2, startlevel, h, w);
   g.run();
 }        
 
