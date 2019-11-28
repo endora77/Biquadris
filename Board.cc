@@ -8,7 +8,7 @@ void Board::notify(Subject* s){
 
 void Board::checkFilledLines(){
     tempScore = 0;;
-    int numDeleted  = 0;
+    numDeleted  = 0;
     for(int i = gridH - 1; i > 3; i++){
         bool filled = true;
         bool emptyLine = true;
@@ -80,6 +80,7 @@ Block* Board::newBlock(const BlockType type, const int row, const int col){
         case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
     }
     currentBlock = blocks.end()->get();
+    numDeleted = 0;
     return currentBlock;
 }
 

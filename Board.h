@@ -26,6 +26,7 @@ class Board: public Observer{
     std::vector<std::unique_ptr<Block>> blocks;
 
     int countBlocks;
+    int numDeleted;
     int totalScore;
     int tempScore;
     BlockType nextType;
@@ -66,6 +67,9 @@ public:
     void restart();
     void eraseBlock(Block* block);
     void addBlock(Block* block);
+    int getLinesDeleted(){
+        return numDeleted;
+    }
 };
 
 #endif

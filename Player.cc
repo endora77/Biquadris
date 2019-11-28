@@ -86,7 +86,7 @@ void Player::rotateCounterClockwise(){
     } 
 }
 
-void Player::drop(){
+bool Player::drop(){
     vector<Cell>& c = currentBlock->getCells();
     int lowest = board->gridH;
     int touchedCell = 0;
@@ -101,6 +101,9 @@ void Player::drop(){
     }
     int shift = lowest - c[i].getPosition().first;
     for(int j = 0; j < shift; j++)down();
+    resetRestrictions();
+    if(board->checkTop()) return false;
+    return true;
 }
 
 int Player::getScore()const{
@@ -112,6 +115,7 @@ string Player::getName()const{
 }
 
 void Player::restart(){
+    success = true;
     board->restart();
 }
 

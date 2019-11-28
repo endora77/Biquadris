@@ -7,4 +7,5 @@ enum class MoveType{moveDown = 0, moveLeft, moveRight, moveClockwise, moveCounte
 
 enum class Restriction{forced, blind, specialHeavy, noRestriction};
 
+enum command
 #endif //BIQUADRIS_ENUMS_H
