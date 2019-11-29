@@ -39,7 +39,35 @@ std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type){
     }
     return calculates;
 }
-
+void Block::furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates){
+    switch(type){
+        case MoveType::moveDown: {
+            for (int i = 0; i < numCells; i++){
+                calculates[i].first ++;
+            }
+            break;
+        }
+        case MoveType::moveLeft: {
+            for (int i = 0; i < numCells; i++){
+                calculates[i].second --;
+            }
+            break;
+        }
+        case MoveType::moveRight: {
+            for (int i = 0; i < numCells; i++){
+                calculates[i].second ++;
+            }
+            break;
+        }
+        case MoveType::moveClockwise: {
+            Clockwise(calculates, numCells);
+            break;
+        }
+        default:{
+            counterClockwise(calculates, numCells);
+        }
+    }
+}
 void Block::Clockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num){
     int row, col, negWidth;
     getPos(poses, num, row, col, negWidth);

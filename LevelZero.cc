@@ -5,36 +5,15 @@
 using namespace std;
 
 // Constructor
-LevelZero::LevelZero() : Level(0, false, false, 0) {}
-
-// nextBlock() reads a string from an ifstream and returns the BlockType of the next block
-BlockType LevelZero::nextBlock(ifstream &in) {
-    string block;
-    if (in >> block) {
-        if (block == "IBlock") {
-            return BlockType::IBlock;
-        }
-        if (block == "JBlock") {
-            return BlockType::JBlock;
-        }
-        if (block == "LBlock") {
-            return BlockType::LBlock;
-        }
-        if (block == "OBlock") {
-            return BlockType::OBlock;
-        }
-        if (block == "SBlock") {
-            return BlockType::SBlock;
-        }
-        if (block == "TBlock") {
-            return BlockType::TBlock;
-        }
-        if (block == "ZBlock") {
-            return BlockType::ZBlock;
-        }
-    }
+LevelZero::LevelZero(const string file) : 
+    Level(0, false, false, 0),file(file) {
+    in.open(file.c_str());
+    if(!in.is_open())throw "Cannot open file in LevelZero";
 }
 
-// nextBlock() does nothing in LevelZero
-BlockType LevelZero::nextBlock() {}
+// nextBlock() reads a string from an ifstream and returns the BlockType of the next block
+BlockType LevelZero::nextBlock() {
+    return readNextBlock();
+}
+
 

@@ -36,5 +36,3 @@ BlockType LevelTwo::nextBlock() {
     }
 }
 
-// nextBlock(std::ifstream &in) does nothing in LevelTwo
-BlockType LevelTwo::nextBlock(std::ifstream &in) {}

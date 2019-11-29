@@ -18,8 +18,6 @@
 #include "BlockFiles/TBlock.h"
 #include "BlockFiles/StarBlock.h"
 class Board: public Observer{
-    std::ifstream blockFile;
-
     const int gridH;
     const int gridW;
     
@@ -38,21 +36,12 @@ public:
     friend class TextDisplay;
     Block* currentBlock;
 
-    Board(std::unique_ptr<Level>& level, const std::vector<Display>& displays, const int height = 15, const int width = 11,
-            const string* fileName = nullptr):
+    Board(std::unique_ptr<Level>& level, const std::vector<Display>& displays, const int height = 15, const int width = 11):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
-
-        if(fileName) blockFile.open(fileName->c_str());
         nextType = level->nextBlock();
-
         //Initialize grid to null
         std::vector<Cell*> temp(gridW, nullptr);
         for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
-    }
- 
-    ~Board(){
-        delete currentBlock;
-        blockFile.close();
     }
 
 //return the row number of the first cell that is empty in this column

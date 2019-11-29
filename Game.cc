@@ -1,7 +1,12 @@
 #include "Game.h"
+using namespace std;
 void Game::newRound(){
     int times = 0;
-    c.getCommand(std::cin, currentCommand, times);
+    std::string cmd;
+    if(!(*in >>cmd)){
+        if(*in)
+    }
+    c.getCommand(*in, currentCommand, times);
     while(true){
         //Exit if command is game is over
         if(currentCommand == Command::quit) return;
@@ -9,10 +14,10 @@ void Game::newRound(){
             //Check if successful only at drop in the run function eventually
             players[currentPlayer].drop();
             //Get command after drop
-            c.getCommand(std::cin, currentCommand, times);
+            c.getCommand(*in, currentCommand, times);
             if(currentCommand == Command::blind || currentCommand == Command::heavy || currentCommand == Command::force){
                 specialEffects();
-                c.getCommand(std::cin, currentCommand, times);
+                c.getCommand(*in, currentCommand, times);
             }
             //Always return after drop, no matter success or fail. Check success or fail in the upper function.
             return;
@@ -43,7 +48,7 @@ void Game::excecute(){
             try{
                 p->levelUp();
             }catch(const char* m){
-                std::cout << m << std::endl;
+                out << m << std::endl;
             }
             break;
         }
@@ -51,7 +56,7 @@ void Game::excecute(){
             try{
                 p->levelDown();
             }catch(const char* m){
-                std::cout << m << std::endl;
+                out << m << std::endl;
             }break;
         }
         case Command::force:
@@ -64,10 +69,23 @@ void Game::excecute(){
             restart();
             break;
         }
-        //ONLY Randoma, norandom, sequence are not implemented and need some discussions about level !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        case Command::norandom:
-        case Command::random:
-        case Command::sequence:
+        case Command::norandom:{
+            std::string file_name;
+            *in >> file_name;
+            players[currentPlayer].norand(file_name);
+            break;
+        }
+        case Command::random:{
+            players[currentPlayer].rand();
+        }
+        case Command::sequence:{
+            std::string file_name;
+            *in >> file_name;
+            temp_in.open(file_name);
+            if(!temp_in.is_open()) 
+                out << "Cannot open the sequence file " <<file_name<< std::endl;
+            in = &temp_in;
+        }
         default:{
             setBlockType();
         }
@@ -121,10 +139,10 @@ void Game::specialEffects(){
                 players[!currentPlayer].restriction = Restriction::forced;
                 while(true){
                     try{
-                        c.getCommand(std::cin, currentCommand, times);
+                        c.getCommand(*in, currentCommand, times);
                         players[!currentPlayer].forcedType = c.getBlockType(currentCommand);
                     }catch(const char*m){
-                        std::cout << m << std::endl;
+                        out << m << std::endl;
                         continue;
                     }
                     break;
@@ -133,7 +151,7 @@ void Game::specialEffects(){
         }
     }
     else{
-        std::cout << "You have only deleted " <<players[currentPlayer].getLinesDeleted()
+        out << "You have only deleted " <<players[currentPlayer].getLinesDeleted()
             <<" lines this time, you are not allowed to use special effects"<< std::endl;
     }
 }
@@ -141,7 +159,7 @@ void Game::specialEffects(){
 void Game::endGame(){
     std::string loser,winner;
     if(players[0].getState() && players[1].getState()){
-        std::cout << "No one lost, no one won."<<std::endl;
+        out << "No one lost, no one won."<<std::endl;
         return;
     }
     if(!players[0].getState()){
@@ -152,17 +170,18 @@ void Game::endGame(){
         loser = players[1].getName();
         winner = players[0].getName();
     }
-    std::cout << loser <<" has lost."<<std::endl;
-    std::cout << winner <<" has won."<<std::endl;
+    out << loser <<" has lost."<<std::endl;
+    out << winner <<" has won."<<std::endl;
 }
 
 int Game::Init(const std::string name1, const std::string name2, const int seed, const std::string script1, const std::string script2, 
     const int startLevel, const int height = 15, const int width = 11){
+    in = &std::cin;
     if(startLevel > 4 || startLevel < 0){
-         std::cout << "startlevel is out of range." << std::endl;
+         out << "startlevel is out of range." << std::endl;
          return -1;
     }
-    displays.emplace_back(std::make_unique(TextDisplay{height, width}));
+    displays.emplace_back(make_unique<Display>(TextDisplay{height, width}));
     if(script1.length())
         players.emplace_back(name1, startLevel, displays, height, width, seed, &script1);
     else 

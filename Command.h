@@ -109,13 +109,11 @@ public:
             }
             throw "Not a valid Block type";
     }
-    void getCommand(std::istream& in, type &c, int& times){
+    void getCommand(std::string cmd, type &c, int& times){
         while(true){
             try{
-                std::string cmd;
                 std::string subCmd;
                 int times;
-                in >>cmd;
                 seperateCommand(cmd, subCmd, times);
                 type c = getSubCommand(subCmd);
             }catch(const char* m){

@@ -13,7 +13,8 @@ public:
     bool applyHeavy() override;
     // Override the nextBlock() method in the base class to select the shape of next Block dropped
     BlockType nextBlock() override;
-    BlockType nextBlock(std::ifstream &in) override;
+    bool setRandom()override;
+    bool unsetRandom(const std::string file)override;
 };
 
 

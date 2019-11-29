@@ -12,7 +12,11 @@ class Block: public Observer, public Subject{
     bool deleted;
     // "level" tracks the the level number when the Block is created
     int level;
+    static void getPos(std::unique_ptr<std::pair<int, int>[]>& poses, const int num, int& row, int& col, int&negWidth);
     static void Block::getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
+    static void Clockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
+    static void counterClockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
+    
 protected:
     std::vector<Cell> cells;
     const int numCells;
@@ -34,11 +38,9 @@ public:
     void right();
     void Clockwise();
     void counterClockwise();
-    void Clockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
-    void counterClockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
-    void getPos(std::unique_ptr<std::pair<int, int>[]>& poses, const int num, int& row, int& col, int&negWidth);
     // calcPosition(MoveType type) returns the position of the block if certain move is done
     std::unique_ptr<std::pair<int, int>[]> calcPosition(const MoveType type);
+    static void furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates);
     std::vector<Cell>& getCells();
     
     virtual ~Block() = 0;

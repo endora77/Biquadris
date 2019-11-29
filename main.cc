@@ -3,17 +3,30 @@
 #include <fstream>
 #include "Game.h"
 using namespace std;
+//Arguments settings
 enum argType{Ttext, Tseed, Tscript1, Tscript2, Tstartlevel, Tplayer1, Tplayer2, Twidth, Theight};
 const std::string arguments[] = {"-text", "-seed", "-scriptfile1", "-scriptfile2", "-startlevel", "-player1", "-player2", "-width", "-height"};
 const int numArgs = 9;
- 
+
+//Get the arguments
+int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h);
+
+//run main
 int main(int argc, char *argv[]) {
-  bool used[9] = {false};
   string f1, f2, p1, p2;
   bool text = false;
   int seed = 0;
   int startlevel = 0;
   int w = 11, h = 15;
+  getArguments(argc, argv, p1, p2, f1, f2, seed, startlevel, w, h);
+
+  Game g;
+  g.Init(p1, p2, seed, f1, f2, startlevel, h, w);
+  g.run();
+}        
+
+int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h){
+  bool used[9] = {false};
   for(int i = 0; i < argc; i++){
     for(int j = 0; j < numArgs; j ++){
       if(arguments[j].compare(argv[i]) == 0){
@@ -65,11 +78,7 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-  Game g;
-  g.Init(p1, p2, seed, f1, f2, startlevel, h, w);
-  g.run();
-}        
-
+}
 // int main(int argc, char *argv[]) {
 //   cin.exceptions(ios::eofbit|ios::failbit);
 //   string cmd;

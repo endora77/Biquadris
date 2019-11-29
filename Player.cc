@@ -5,7 +5,7 @@ using namespace std;
 void Player::setLevel(const int l, int seed){
     switch(l){
         case 0:{
-            level = make_unique<Level>(LevelZero{});
+            level = make_unique<Level>(LevelZero{file0});
             break;
         }
         case 1:{
@@ -43,53 +43,60 @@ void Player::down(){
         if(level->applyHeavy()) down();
     }
 }
+void Player::getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs){
+    if(level->applyHeavy()) downs ++;
+    if(restriction == Restriction::specialHeavy) downs += 2;
+    for( int i = 0; i < downs; i++) Block::furtherCalculates(MoveType::moveDown, pos);
+}
 
 void Player::left(){
+    //Calculate position:
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft);
+    int downs = 0;
+    getHorizontalDowns(pos, downs);
+
+    //Move the block if possible, if no space left below, cannot move, must down or drop.
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->left();
+        for( int i = 0; i < downs; i++) currentBlock->down();
         board->addBlock(currentBlock);
-        if(level->applyHeavy()) down();
-        if(restriction == Restriction::specialHeavy){
-            down();
-            down();
-        }
-    } 
-   
+    }
 }
 
 void Player::right(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight);
+    int downs = 0;
+    getHorizontalDowns(pos, downs);
+
+    //Move the block if possible, if no space left below, cannot move, must down or drop.
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->right();
+        for( int i = 0; i < downs; i++) currentBlock->down();
         board->addBlock(currentBlock);
-        if(level->applyHeavy()) down();
-        if(restriction == Restriction::specialHeavy){
-            down();
-            down();
-        }
-    } 
+    }
 }
 
 void Player::rotateClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
+    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos);
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->Clockwise();
+        currentBlock->down();
         board->addBlock(currentBlock);
-        if(level->applyHeavy()) down();
     } 
 }
 
 void Player::rotateCounterClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
+    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos);
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->counterClockwise();
+        currentBlock->down();
         board->addBlock(currentBlock);
-        if(level->applyHeavy()) down();
     }
 }
 
@@ -129,17 +136,25 @@ void Player::resetRestrictions(){
     restriction = Restriction::noRestriction;
 }
 
+void Player::levelUp(){
+    if(currentLevel < 4){
+        currentLevel++;
+        setLevel(currentLevel, seed);
+    }else throw "Cannot levelup anymore.";
+}
 
-// void Player::forceOther(Player *otherPlayer, BlockType bType){
-//     // give otherPlayer's board the bType and let board changes the current
-//     // block's type to bType.
-// }
+void Player::levelDown(){
+    if(currentLevel > 0){
+        currentLevel--;
+        setLevel(currentLevel, seed);
+    }else throw "Cannot leveldown anymore.";
+}
 
-// void Player::heavyOther(Player *otherPlayer){
-//     // applys heavy effect to otherPlayer until the block
-//     // drops
-// }
+int Player::getState()const{
+    return success;
+}
 
-// void Player::blindOther(Player *otherPlayer){
-    
-// }
+int Player::getLinesDeleted(){
+    return board->getLinesDeleted();
+}
+
