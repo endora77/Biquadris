@@ -9,6 +9,7 @@ class TextDisplay : public Display {
     std::vector<std::vector<char>> theDisplay;
     const int row;
     const int column;
+    std::ostream &out;
 public:
     // Constructor
     TextDisplay(int row = 15, int column = 11);
@@ -22,11 +23,9 @@ public:
     void fillTopInfo() override;
     // fillNextBlock() displays the next Block shape in the bottom 3 rows of the board
     void fillNextBlock() override;
-
-    friend std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
+    // notify() prints the display in text format
+    void notify() override;
 };
-
-std::ostream &operator<<(std::ostream &out, const TextDisplay &td);
 
 
 #endif //BIQUADRIS_TEXTDISPLAY_H

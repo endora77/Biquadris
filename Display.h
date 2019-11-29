@@ -2,8 +2,9 @@
 #define BIQUADRIS_DISPLAY_H
 #include <vector>
 #include <string>
+#include "Game.h"
 
-class Display {
+class Display : public Observer {
 protected:
     Game *game;
 

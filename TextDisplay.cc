@@ -1,13 +1,14 @@
 #include "TextDisplay.h"
 #include <vector>
 #include <string>
+#include <iostream>
 #include "Enums.h"
 #include "Board.h"
 
 using namespace std;
 
 // Constructor
-TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column} {
+TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, out{cout} {
     // Display the first two rows (Level, score)
     init("Level:");
     init("Score:");
@@ -90,7 +91,7 @@ void TextDisplay::init(string type) {
 void TextDisplay::fillBlind() {
     // Check if one or more players has blind effect
     for (int i = 0; i < 2; i += 1) {
-        if (game->players[i].blind) {
+        if (game->players[i].restriction == Restriction::blind) {
             for (int j = 3 + (i * 11) + (i * 6); j < 12 + (i * 11) + (i * 6); j += 1) {
                 for (int k = 3; k < 9; k += 1) {
                     theDisplay[j][k] = '?';
@@ -140,8 +141,8 @@ void TextDisplay::fillBlock() {
 // fillTopInfo() displays the information on the top 3 rows (i.e. level, score, and and a line)
 void TextDisplay::fillTopInfo() {
     for (int i = 0; i < 2; i += 1) {
-        int level = game->players[i].board->getLevel();
-        int score = game->players[i].board->getLevel();
+        int level = game->players[i].currentLevel;
+        int score = game->players[i].currentLevel;
         theDisplay[0][10 + i * 17] = static_cast<char>(level);
         if (score < 10) {
             theDisplay[1][14 + i * 17] = static_cast<char>(score);
@@ -157,7 +158,7 @@ void TextDisplay::fillTopInfo() {
 // fillNextBlock() displays the next Block shape in the bottom rows of the board
 void TextDisplay::fillNextBlock() {
     for (int i = 0; i < 2; i += 1) {
-        BlockType type = game->players[i].board->getNextBlock();
+        BlockType type = game->players[i].nextType;
         if (type == BlockType::IBlock) {
             theDisplay[row + 9][0 + i * 17] = 'I';
             theDisplay[row + 9][1 + i * 17] = 'I';
@@ -203,14 +204,13 @@ void TextDisplay::fillNextBlock() {
     }
 }
 
-std::ostream &operator<<(std::ostream &out, const TextDisplay &td) {
-    int row = td.theDisplay.size();
+void TextDisplay::notify() {
+    int row = theDisplay.size();
     for (int i = 0; i < row; i += 1) {
-        int column = td.theDisplay[i].size();
+        int column = theDisplay[i].size();
         for (int j = 0; j < (2 * column + 6); j += 1) {
-            out << td.theDisplay[i][j];
+            out << theDisplay[i][j];
         }
         out << endl;
     }
-    return out;
 }
