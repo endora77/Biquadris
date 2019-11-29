@@ -20,7 +20,8 @@ class Player: public Subject{
     int seed;
     Block* currentBlock;
     bool success;
-    void getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs);
+    BlockType nextType;
+    void getHorizontalDowns(std::unique_ptr<std::pair<int, int>[]>& pos, int& downs);
 public:
     Restriction restriction;
     BlockType forcedType;

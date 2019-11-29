@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
   int w = 11, h = 15;
   getArguments(argc, argv, p1, p2, f1, f2, seed, startlevel, w, h);
 
-  Game g;
+  Game g{std::cin, std::cout};
   g.Init(p1, p2, seed, f1, f2, startlevel, h, w);
   g.run();
 }        

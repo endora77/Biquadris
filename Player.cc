@@ -30,8 +30,9 @@ void Player::setLevel(const int l, int seed){
 void Player::getNextBlock(){
     BlockType type;
     if(restriction == Restriction::forced) type = forcedType;
-    else type = level->nextBlock();
+    else type = nextType;
     currentBlock = board->newBlock(type, 0, 3);
+    nextType = level->nextBlock();
 }
 
 void Player::down(){
