@@ -3,10 +3,8 @@ using namespace std;
 void Game::newRound(){
     int times = 0;
     std::string cmd;
-    if(!(*in >>cmd)){
-        if(*in)
-    }
-    c.getCommand(*in, currentCommand, times);
+    readNext(cmd);
+    c.getCommand(cmd, currentCommand, times);
     while(true){
         //Exit if command is game is over
         if(currentCommand == Command::quit) return;
@@ -14,15 +12,25 @@ void Game::newRound(){
             //Check if successful only at drop in the run function eventually
             players[currentPlayer].drop();
             //Get command after drop
-            c.getCommand(*in, currentCommand, times);
+            readNext(cmd);
+            c.getCommand(cmd, currentCommand, times);
             if(currentCommand == Command::blind || currentCommand == Command::heavy || currentCommand == Command::force){
                 specialEffects();
-                c.getCommand(*in, currentCommand, times);
+                readNext(cmd);
+                c.getCommand(cmd, currentCommand, times);
             }
             //Always return after drop, no matter success or fail. Check success or fail in the upper function.
             return;
         }
         excecute();
+    }
+}
+void Game::readNext(std::string& cmd){
+    if(!(*in >>cmd)){
+        if(in == &temp_in){
+            in = &original_in;
+            temp_in.close();
+        }
     }
 }
 
@@ -71,7 +79,7 @@ void Game::excecute(){
         }
         case Command::norandom:{
             std::string file_name;
-            *in >> file_name;
+            readNext(file_name);
             players[currentPlayer].norand(file_name);
             break;
         }
@@ -80,7 +88,7 @@ void Game::excecute(){
         }
         case Command::sequence:{
             std::string file_name;
-            *in >> file_name;
+            readNext(file_name);
             temp_in.open(file_name);
             if(!temp_in.is_open()) 
                 out << "Cannot open the sequence file " <<file_name<< std::endl;
@@ -127,6 +135,7 @@ void Game::setBlockType(){
 
 void Game::specialEffects(){
     int times = 0;
+    std::string cmd;
     if(players[currentPlayer].getLinesDeleted() >= 2){
         switch(currentCommand){
             case Command::blind:{
@@ -139,7 +148,8 @@ void Game::specialEffects(){
                 players[!currentPlayer].restriction = Restriction::forced;
                 while(true){
                     try{
-                        c.getCommand(*in, currentCommand, times);
+                        readNext(cmd);
+                        c.getCommand(cmd, currentCommand, times);
                         players[!currentPlayer].forcedType = c.getBlockType(currentCommand);
                     }catch(const char*m){
                         out << m << std::endl;
@@ -176,7 +186,7 @@ void Game::endGame(){
 
 int Game::Init(const std::string name1, const std::string name2, const int seed, const std::string script1, const std::string script2, 
     const int startLevel, const int height = 15, const int width = 11){
-    in = &std::cin;
+    in = &original_in;
     if(startLevel > 4 || startLevel < 0){
          out << "startlevel is out of range." << std::endl;
          return -1;

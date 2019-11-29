@@ -61,6 +61,7 @@ public:
     void rand(){
         level->setRandom();
     }
+    friend class TextDisplay;
 };
 
 #endif

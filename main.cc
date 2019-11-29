@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   g.run();
 }        
 
-int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h){
+int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h, bool &text){
   bool used[9] = {false};
   for(int i = 0; i < argc; i++){
     for(int j = 0; j < numArgs; j ++){
