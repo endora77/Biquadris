@@ -3,17 +3,9 @@
 #include <cstdlib>
 #include <fstream>
 
-LevelFour::LevelFour(unsigned int seed = 0) : Level(seed, true, true, 4) {
+LevelFour::LevelFour(unsigned int seed) : Level{seed, true, true, 4} {
     randomApply = true;
     srand(seed);
-}
-
-bool LevelFour::addStar() {
-    return star;
-}
-
-bool LevelFour::applyHeavy() {
-    return heavy;
 }
 
 BlockType LevelFour::nextBlock() {

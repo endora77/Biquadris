@@ -2,26 +2,26 @@
 using namespace std;
 
 //Throws an error
-void Player::setLevel(const int l, int seed){
+void Player::setLevel(const int l, unsigned int seed){
     switch(l){
         case 0:{
-            level = make_unique<Level>(LevelZero{file0});
+            level = make_unique<LevelZero>(file0);
             break;
         }
         case 1:{
-            level = make_unique<Level>(LevelOne{seed});
+            level = make_unique<LevelOne>(seed);
             break;
         }
         case 2:{
-            level = make_unique<Level>(LevelTwo{seed});
+            level = make_unique<LevelTwo>(seed);
             break;
         }
         case 3:{
-            level = make_unique<Level>(LevelThree{seed});
+            level = make_unique<LevelThree>(seed);
             break;
         }
         case 4:{
-            level = make_unique<Level>(LevelFour{seed});
+            level = make_unique<LevelFour>(seed);
             break;
         }
     }
@@ -44,17 +44,17 @@ void Player::down(){
         if(level->applyHeavy()) down();
     }
 }
-void Player::getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs){
+void Player::getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs, const int blockSize){
     if(level->applyHeavy()) downs ++;
     if(restriction == Restriction::specialHeavy) downs += 2;
-    for( int i = 0; i < downs; i++) Block::furtherCalculates(MoveType::moveDown, pos);
+    for( int i = 0; i < downs; i++) Block::furtherCalculates(MoveType::moveDown, pos, blockSize);
 }
 
 void Player::left(){
     //Calculate position:
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft);
     int downs = 0;
-    getHorizontalDowns(pos, downs);
+    getHorizontalDowns(pos, downs,currentBlock->getSize());
 
     //Move the block if possible, if no space left below, cannot move, must down or drop.
     if(board->checkPosition(pos)){
@@ -68,7 +68,7 @@ void Player::left(){
 void Player::right(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight);
     int downs = 0;
-    getHorizontalDowns(pos, downs);
+    getHorizontalDowns(pos, downs, currentBlock->getSize());
 
     //Move the block if possible, if no space left below, cannot move, must down or drop.
     if(board->checkPosition(pos)){
@@ -81,7 +81,7 @@ void Player::right(){
 
 void Player::rotateClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos);
+    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->Clockwise();
@@ -92,7 +92,7 @@ void Player::rotateClockwise(){
 
 void Player::rotateCounterClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos);
+    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
     if(board->checkPosition(pos)){
         board->eraseBlock(currentBlock);
         currentBlock->counterClockwise();
@@ -102,7 +102,7 @@ void Player::rotateCounterClockwise(){
 }
 
 void Player::drop(){
-    vector<Cell>& c = currentBlock->getCells();
+    const vector<Cell>& c = currentBlock->getCells();
     int lowest = board->gridH;
     int touchedCell = 0;
     int i = 0; 
@@ -158,4 +158,3 @@ int Player::getState()const{
 int Player::getLinesDeleted(){
     return board->getLinesDeleted();
 }
-

@@ -5,10 +5,7 @@
 using namespace std;
 
 // Constructor
-Cell::Cell(int row, int column, BlockType type, Block* block): type{type}{
-    position = make_pair(row, column);
-    this->attach(block);
-}
+
 // getPosition() returns the reference to the position of the cell on the board
 std::pair<int, int> Cell::getPosition() const{
     return position;

@@ -5,7 +5,7 @@ enum class BlockType{LBlock = 0, IBlock, JBlock, OBlock, SBlock, ZBlock, TBlock,
 
 enum class MoveType{moveDown = 0, moveLeft, moveRight, moveClockwise, moveCounterClockwise};
 
-enum class Restriction{forced, blind, specialHeavy, noRestriction};
+enum class Restriction{forced = 0, blind, specialHeavy, noRestriction};
 
-enum command
 #endif //BIQUADRIS_ENUMS_H
+ 

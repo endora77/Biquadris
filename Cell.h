@@ -1,18 +1,20 @@
 #ifndef BIQUADRIS_CELL_H
 #define BIQUADRIS_CELL_H
 #include "Subject.h"
-#include "Block.h"
+#include "Enums.h"
 #include <utility>
-
-class Cell: public Subject{
+class Block;
+class Cell final: public Subject{
     // Given the position of the cell on the board
     std::pair<int, int> position;
     BlockType type;
 
 public:
     // Constructor
-    Cell(int row, int column, BlockType type, Block* block);
-
+    Cell(int row, int column, BlockType type, Observer* block): type{type}{
+        position = std::make_pair(row, column);
+        this->attach(block);
+    }
     void setPosition(const int row, const int col);
     // moveDown() moves the cell down
     void moveDown();

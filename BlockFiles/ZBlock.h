@@ -1,9 +1,6 @@
 #ifndef ZBLOCK_H
 #define ZBLOCK_H
 #include "../Block.h"
-#include "../Cell.h"
-#include "../Enums.h"
-
 // Z-block is in the form of
 // ZZ
 //  ZZ

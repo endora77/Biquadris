@@ -1,10 +1,6 @@
 #include "Board.h"
 using namespace std;
 
-//Add score when a block is deleted:
-void Board::notify(Subject* s){
-    tempScore += s->getState();
-}
 
 void Board::checkFilledLines(){
     tempScore = 0;;
@@ -46,6 +42,7 @@ int Board::checkColBot(int col){
         while(i >= 0 && grid[i][col] != nullptr) i --;
         return i;
     }
+    return -1;
 }
 bool Board::checkTop(){
     for(int i = 0; i < gridW; i++){
@@ -53,6 +50,7 @@ bool Board::checkTop(){
     }
     return false;
 }
+
 void Board::deleteRow(int row){
     for(int i = 0; i < gridW; i++){
         grid[row][i]->setPosition(-1, -1);
@@ -63,20 +61,37 @@ void Board::deleteRow(int row){
 void Board::addStar(){
     int mid = gridW/2;
     int lowest = checkColBot(mid);
-    blocks.emplace_back(make_unique<Block>(StarBlock{0, mid, 0, this}));
-    grid[lowest][mid] = &(blocks[blocks.size - 1]->getCells()[0]);
+    std::unique_ptr<Block> b = make_unique<StarBlock>(StarBlock{0, mid, 0, this});
+    blocks.push_back(std::move(b));
+    grid[lowest][mid] = &(b->getCells()[0]);
 }
 
 Block* Board::newBlock(const BlockType type, const int row, const int col){
     switch(type){
-        case BlockType::ZBlock: blocks.emplace_back(make_unique<Block>(ZBlock{row, col, level->level, this}));
-        case BlockType::LBlock: blocks.emplace_back(make_unique<Block>(LBlock{row, col, level->level, this}));
-        case BlockType::IBlock: blocks.emplace_back(make_unique<Block>(IBlock{row, col, level->level, this}));
-        case BlockType::JBlock: blocks.emplace_back(make_unique<Block>(JBlock{row, col, level->level, this}));
-        case BlockType::OBlock: blocks.emplace_back(make_unique<Block>(OBlock{row, col, level->level, this}));
-        case BlockType::SBlock: blocks.emplace_back(make_unique<Block>(SBlock{row, col, level->level, this}));
-        case BlockType::TBlock: blocks.emplace_back(make_unique<Block>(TBlock{row, col, level->level, this}));
-        case BlockType::StarBlock: blocks.emplace_back(make_unique<Block>(StarBlock{row, col, level->level, this}));
+        case BlockType::ZBlock: {
+            blocks.push_back(make_unique<ZBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::LBlock:{
+            blocks.push_back(make_unique<LBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::IBlock: {
+            blocks.push_back(make_unique<IBlock>(row, col, level->level, this)); break;
+        }
+        case BlockType::JBlock: {
+            blocks.push_back(make_unique<JBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::OBlock:{
+            blocks.push_back(make_unique<OBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::SBlock: {
+            blocks.emplace_back(make_unique<SBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::TBlock: {
+            blocks.emplace_back(make_unique<TBlock>(row, col, level->level, this));break;
+        }
+        case BlockType::StarBlock: {
+            blocks.emplace_back(make_unique<StarBlock>(row, col, level->level, this));break;
+        }
     }
     currentBlock = blocks.end()->get();
     numDeleted = 0;
@@ -85,7 +100,7 @@ Block* Board::newBlock(const BlockType type, const int row, const int col){
 
 void Board::restart(){
     currentBlock = nullptr;
-    blocks.clear;
+    blocks.clear();
     for(auto &a : grid){
         for(auto &b: a){
             b = nullptr;
@@ -97,7 +112,7 @@ void Board::restart(){
 }
 
 void Board::eraseBlock(Block* block){
-    vector<Cell>& cells = block->getCells();
+    const vector<Cell>& cells = block->getCells();
     for(auto& c : cells){
         pair<int, int> pos = c.getPosition();
         grid[pos.first][pos.second] = nullptr;

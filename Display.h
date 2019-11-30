@@ -2,6 +2,10 @@
 #define BIQUADRIS_DISPLAY_H
 #include <vector>
 #include <string>
+#include "Observer.h"
+#include "Enums.h"
+
+//Not safe to include, since Game includes display
 #include "Game.h"
 
 class Display : public Observer {
@@ -15,6 +19,5 @@ protected:
     virtual void fillTopInfo() = 0;
     virtual void fillNextBlock() = 0;
 };
-
 
 #endif //BIQUADRIS_DISPLAY_H

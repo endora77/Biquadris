@@ -1,14 +1,7 @@
 #include "TextDisplay.h"
-#include <vector>
-#include <string>
-#include <iostream>
-#include "Enums.h"
-#include "Board.h"
-
 using namespace std;
-
 // Constructor
-TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, out{cout} {
+TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, out{std::cout} {
     // Display the first two rows (Level, score)
     init("Level:");
     init("Score:");
@@ -16,7 +9,7 @@ TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, o
     init("dashes");
     // Initialize the three reserved empty row
     init("empty");
-    // Initialize the board
+    // Initialize the boardß
     for (int i = 0; i < row; i += 1) {
         init("empty");
     }
@@ -29,7 +22,7 @@ TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, o
 // Helper function to initialize boards for two players
 void TextDisplay::init(string type) {
     vector<char> r;
-    int size = type.length();
+    int size = (int)type.length();
     if (type == "Next:") {
         // Set up for Player 1
         for (int i = 0; i < size; i += 1) {
@@ -205,9 +198,9 @@ void TextDisplay::fillNextBlock() {
 }
 
 void TextDisplay::notify() {
-    int row = theDisplay.size();
+    int row = (int)theDisplay.size();
     for (int i = 0; i < row; i += 1) {
-        int column = theDisplay[i].size();
+        int column = (int)theDisplay[i].size();
         for (int j = 0; j < (2 * column + 6); j += 1) {
             out << theDisplay[i][j];
         }

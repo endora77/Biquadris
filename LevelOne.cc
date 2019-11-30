@@ -4,16 +4,8 @@
 #include <fstream>
 
 // Constructor
-LevelOne::LevelOne(unsigned int seed = 0) : Level(seed, false, false, 1) {
+LevelOne::LevelOne(unsigned int seed) : Level{seed, false, false, 1} {
     srand(seed);
-}
-
-bool LevelOne::addStar() {
-    return star;
-}
-
-bool LevelOne::applyHeavy() {
-    return heavy;
 }
 
 BlockType LevelOne::nextBlock() {

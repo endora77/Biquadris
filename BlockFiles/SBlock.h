@@ -1,9 +1,6 @@
 #ifndef SBLOCK_H
 #define SBLOCK_H
 #include "../Block.h"
-#include "../Cell.h"
-#include "../Enums.h"
-
 // S-block is in the form of
 //  SS
 // SS

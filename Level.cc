@@ -1,9 +1,7 @@
 #include "Level.h"
 
 // Constructor
-Level::Level(int seed, bool star, bool heavy, int level): 
-    seed{seed}, star{star}, heavy{heavy}, level{level},
-    randomApply{false}, randomSwitch{true}, takeSequence{false} {}
+
 
 BlockType Level::readNextBlock(){
     std::string block;
@@ -29,8 +27,10 @@ BlockType Level::readNextBlock(){
         if (block == "Z") {
             return BlockType::ZBlock;
         }
+        throw "Not a valid block type";
     }else{
         in.clear();
         in.seekg(0, std::ios::beg);
+        return readNextBlock();
     }
 }

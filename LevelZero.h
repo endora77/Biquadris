@@ -8,13 +8,9 @@ class LevelZero : public Level {
     std::string file;
 public:
     // Constructor
-    LevelZero(const string file);
-    // Override the addStar() method and return a boolean value of whether addStar effect will be applied
-    bool addStar() override;
-    // Override the applyHeavy() method and return a boolean value of whether the heavy effect will be applied
-    bool applyHeavy() override;
+    LevelZero(const std::string file);
     // Override the nextBlock() method in the base class to select the shape of next Block dropped
-    BlockType nextBlock() override;
+    BlockType nextBlock();
 };
 
 

@@ -1,14 +1,12 @@
 #ifndef BOARD_H
 #define BOARD_H
-#include "Observer.h"
-#include "Cell.h"
+
 #include <vector>
-#include "Display.h"
-#include "TextDisplay.h"
-#include "Enums.h"
-#include "Level.h"
 #include <string>
 #include <fstream>
+
+//Safe to include block.h, blocks would notify the board.
+#include "Block.h"
 #include "BlockFiles/ZBlock.h"
 #include "BlockFiles/LBlock.h"
 #include "BlockFiles/IBlock.h"
@@ -17,7 +15,14 @@
 #include "BlockFiles/SBlock.h"
 #include "BlockFiles/TBlock.h"
 #include "BlockFiles/StarBlock.h"
-class Board: public Observer{
+
+//Safe to include
+#include "Observer.h"
+#include "Enums.h"
+#include "Level.h"
+//Not safe to include, since Board includes Display, Display includes Game, Game inlcudes player, Player includes Board
+
+class Board final: public Observer{
     const int gridH;
     const int gridW;
     
@@ -35,14 +40,12 @@ public:
     friend class TextDisplay;
     Block* currentBlock;
 
-    Board(std::unique_ptr<Level>& level, const std::vector<Display>& displays, const int height = 15, const int width = 11):
+    Board(std::unique_ptr<Level>& level, const int height = 15, const int width = 11):
         gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
-        //Initialize grid to null
         std::vector<Cell*> temp(gridW, nullptr);
         for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
     }
 
-//return the row number of the first cell that is empty in this column
     Block* newBlock(const BlockType type, const int row, const int col);
     int checkColBot(int col);
     bool checkPosition(const std::unique_ptr<std::pair<int, int>[]>& pos) const;
@@ -50,13 +53,17 @@ public:
     void addStar();
     void deleteRow(int row);
     bool checkTop();
-    void notify(Subject* s);
+
     void draw();
     void restart();
     void eraseBlock(Block* block);
     void addBlock(Block* block);
     int getLinesDeleted(){
         return numDeleted;
+    }
+    //Add score when a block is deleted:
+    void notify(Subject* s)override{
+        tempScore += s->getState();
     }
 };
 

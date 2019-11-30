@@ -6,6 +6,7 @@
 class Level {
 protected:
     std::ifstream in;
+    
     unsigned int seed;
     // Tell the Board whether addStar effect will apply in this level
     const bool star;
@@ -13,22 +14,21 @@ protected:
     const bool heavy;
     bool randomApply;
     bool randomSwitch;
+    
 public:
     const int level;
     // Constructor
-    Level(int seed, bool star, bool heavy, int level);
-    virtual bool addStar() = 0;
-    virtual bool applyHeavy() = 0;
-    virtual BlockType nextBlock();
-
-    //return false if it is not level 3 or 4, cannot setRandom or unset
-    virtual bool setRandom(){
-        return false;
-    }
-    virtual bool unsetRandom(const std::string file){
-        return false;
-    }
+    Level(unsigned int seed, bool star, bool heavy, int level):
+        seed{seed}, star{star}, heavy{heavy}, level{level},
+        randomApply{false}, randomSwitch{true}{}
+    bool addStar(){ return star; };
+    bool applyHeavy(){ return heavy;};
     BlockType readNextBlock();
+    
+    //Virtual methods below:
+    virtual BlockType nextBlock() = 0;
+    virtual bool setRandom(){ return false; }
+    virtual bool unsetRandom(const std::string file){ return false;}
 };
 
 

@@ -1,8 +1,6 @@
 #ifndef JBLOCK_H
 #define JBLOCK_H
 #include "../Block.h"
-#include "../Cell.h"
-#include "../Enums.h"
 
 // JBlock is in the form of 
 // J

@@ -5,7 +5,7 @@
 #include <vector>
 #include "Enums.h"
 #include "Subject.h"
-class Cell;
+#include "Cell.h"
 
 class Block: public Observer, public Subject{
     // Check if the Block is deleted
@@ -13,15 +13,16 @@ class Block: public Observer, public Subject{
     // "level" tracks the the level number when the Block is created
     int level;
     static void getPos(std::unique_ptr<std::pair<int, int>[]>& poses, const int num, int& row, int& col, int&negWidth);
-    static void Block::getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
+    static void getPos(std::vector<Cell> &cells, int& row, int& left, int&right);
     static void Clockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
     static void counterClockwise(std::unique_ptr<std::pair<int, int>[]>& poses, const int num);
     
 protected:
     std::vector<Cell> cells;
     const int numCells;
-
+  
 public:
+    
     Block(const int level, const int numCells, Observer* obs);
 
     void notify() override;
@@ -39,9 +40,13 @@ public:
     void Clockwise();
     void counterClockwise();
     // calcPosition(MoveType type) returns the position of the block if certain move is done
-    std::unique_ptr<std::pair<int, int>[]> calcPosition(const MoveType type);
-    static void furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates);
+    std::unique_ptr<std::pair<int, int>[]> calcPosition(const MoveType type)const;
+    static void furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates, const int numCells);
     std::vector<Cell>& getCells();
+    
+    int getSize() const{
+        return numCells;
+    }
     
     virtual ~Block() = 0;
     int getState() const override{

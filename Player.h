@@ -1,18 +1,22 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "board.h"
-#include "block.h"
-#include "Enums.h"
+#include <string>
+#include <vector>
+//Level is safe, it does not need to know about any other class
 #include "LevelZero.h"
 #include "LevelOne.h"
 #include "LevelTwo.h"
 #include "LevelThree.h"
 #include "LevelFour.h"
-#include "Display.h"
+#include "Level.h"
+
+//Observer, Subject, Enums are safe.
 #include "Subject.h"
-#include <string>
+#include "Board.h"
+
+
 //Notify observers are all calle din the Game class
-class Player: public Subject{
+class Player final: public Subject{
     std::string name;
     std::string file0;
     std::unique_ptr<Level> level;
@@ -21,20 +25,20 @@ class Player: public Subject{
     Block* currentBlock;
     bool success;
     BlockType nextType;
-    void getHorizontalDowns(std::unique_ptr<std::pair<int, int>[]>& pos, int& downs);
+    void getHorizontalDowns(std::unique_ptr<std::pair<int, int>[]>& pos, int& downs, const int blockSize);
 public:
     Restriction restriction;
     BlockType forcedType;
     std::unique_ptr<Board> board;
-    Player::Player(std::string name, const int level, std::vector<Display*>& displays, 
+    Player(std::string name, const int lev, std::vector<std::unique_ptr<Observer>>& displays,
         const int height = 15, const int width = 11, int seed = 0, const std::string file0 = "no_file_specified"): 
         name{name}, file0 {file0}{
             for(auto& a : displays){
-                attach(a);
+                attach(a.get());
             }
-            setLevel(level, seed);
-            currentLevel = level;
-            board = std::make_unique<Board>(this->level, displays, height, width);
+            setLevel(lev, seed);
+            currentLevel = lev;
+            board = std::make_unique<Board>(this->level, height, width);
             this->seed = seed;
             success = true;
         }
@@ -44,7 +48,7 @@ public:
     void restart();
     int getScore() const;
 
-    void setLevel(const int l, int seed);
+    void setLevel(const int l, unsigned int seed);
     void getNextBlock();
     void down();
     void left();

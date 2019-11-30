@@ -1,7 +1,10 @@
+//Game could be used unmodified
 #include <string>
 #include <iostream>
 #include <fstream>
 #include "Game.h"
+#include "TextDisplay.h"
+
 using namespace std;
 //Arguments settings
 enum argType{Ttext, Tseed, Tscript1, Tscript2, Tstartlevel, Tplayer1, Tplayer2, Twidth, Theight};
@@ -9,51 +12,64 @@ const std::string arguments[] = {"-text", "-seed", "-scriptfile1", "-scriptfile2
 const int numArgs = 9;
 
 //Get the arguments
-int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h);
+void getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h, bool &text);
 
 //run main
 int main(int argc, char *argv[]) {
-  string f1, f2, p1, p2;
-  bool text = false;
-  int seed = 0;
-  int startlevel = 0;
-  int w = 11, h = 15;
-  getArguments(argc, argv, p1, p2, f1, f2, seed, startlevel, w, h);
+    string f1, f2, p1 = "player1", p2 = "player2";
+    bool text = false;
+    int seed = 0;
+    int startlevel = 0;
+    int w = 11, h = 15;
 
-  Game g{std::cin, std::cout};
-  g.Init(p1, p2, seed, f1, f2, startlevel, h, w);
-  g.run();
-}        
+    getArguments(argc, argv, p1, p2, f1, f2, seed, startlevel, w, h, text);
+    cout << "p1, p2, seed, f1, f2, startlevel, h, w"<<endl;
+    cout << p1<<" "<<p2<<" "<<seed<<" "<<f1<<" "<<f2<<" "<<startlevel<<" "<<h<<" "<<w<<endl;
 
-int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h, bool &text){
+    std::vector<unique_ptr<Observer>> displays;
+    displays.emplace_back(make_unique<TextDisplay>(TextDisplay{h, w}));
+
+    Game g{std::cin, std::cout};
+    g.Init(p1, p2, seed, f1, f2, startlevel, std::move(displays), h, w);
+    g.run();
+}
+
+void getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, string& f2, int& seed, int& startlevel, int& w, int& h, bool &text){
   bool used[9] = {false};
-  for(int i = 0; i < argc; i++){
+  for(int i = 1; i < argc; i++){
     for(int j = 0; j < numArgs; j ++){
       if(arguments[j].compare(argv[i]) == 0){
         used[j] = true;
-        if(j == Ttext) text = true;
+          if(j == Ttext){
+              text = true;
+              break;
+          }
         else{
+          if(i >= argc - 1){
+            cout << "Expecting one more word after "<<argv[i]<<endl;
+            exit(-1);
+          }
           if( i < argc - 1){
             i++;
             switch(j){
               case Tseed:{
                 string temp = argv[i];
-                seed = stoi(temp);
+                seed = Command::getNumber(temp, std::cout);
                 break;
               }
               case Tstartlevel:{
                 string temp = argv[i];
-                startlevel = stoi(temp);
+                startlevel = Command::getNumber(temp, std::cout);
                 break;
               }
               case Twidth:{
                 string temp = argv[i];
-                w = stoi(temp);
+                w = Command::getNumber(temp, std::cout);
                 break;
               }
               case Theight:{
                 string temp = argv[i];
-                h = stoi(temp);
+                h = Command::getNumber(temp, std::cout);
                 break;
               }
               case Tplayer1:{
@@ -78,7 +94,20 @@ int getArguments(int argc, char* argv[], string& p1, string& p2, string& f1, str
       }
     }
   }
+    if(startlevel == 0){
+        if(!f1.size() || !f2.size()){
+            cout <<"Missing sequence files since it is starting at level 0" <<endl;
+            exit(-1);
+        }
+    }
+    if(startlevel > 4 || startlevel < 0){
+        cout << "startlevel is out of range." << std::endl;
+        exit(-1);
+    }
 }
+
+
+
 // int main(int argc, char *argv[]) {
 //   cin.exceptions(ios::eofbit|ios::failbit);
 //   string cmd;

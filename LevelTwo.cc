@@ -1,21 +1,11 @@
 #include "LevelTwo.h"
 #include "Enums.h"
 #include <cstdlib>
-#include <fstream>
 
 // Constructor
-LevelTwo::LevelTwo(unsigned int seed = 0) : Level(seed, false, false, 2) {
+LevelTwo::LevelTwo(unsigned int seed) : Level{seed, false, false, 2} {
     srand(seed);
 }
-
-bool LevelTwo::addStar() {
-    return star;
-}
-
-bool LevelTwo::applyHeavy() {
-    return heavy;
-}
-
 // Override the nextBlock() method in the base class to select the shape of next Block dropped
 BlockType LevelTwo::nextBlock() {
     int r = rand() % 7;

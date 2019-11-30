@@ -5,10 +5,10 @@
 class Subject{
     std::vector<Observer*> Observers;
 public:
-    void attach(const Observer* obs){
+    void attach(Observer* obs){
         Observers.emplace_back(obs);
     }
-    void detach(const Observer* obs){
+    void detach(Observer* obs){
         for(auto a = Observers.begin(); a != Observers.end(); a++){
             if(*a == obs) Observers.erase(a);
         }

@@ -4,17 +4,9 @@
 #include <fstream>
 using namespace std;
 // Constructor
-LevelThree::LevelThree(unsigned int seed = 0) : Level(seed, false, true, 3) {
+LevelThree::LevelThree(unsigned int seed) : Level{seed, false, true, 3} {
     randomApply = true;
     srand(seed);
-}
-
-bool LevelThree::addStar() {
-    return star;
-}
-
-bool LevelThree::applyHeavy() {
-    return heavy;
 }
 
 BlockType LevelThree::nextBlock() {

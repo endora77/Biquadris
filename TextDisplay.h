@@ -1,10 +1,6 @@
-#ifndef BIQUADRIS_TEXTDISPLAY_H
-#define BIQUADRIS_TEXTDISPLAY_H
-#include <string>
-#include <iostream>
-#include <vector>
+#ifndef TextDisplay_h
+#define TextDisplay_h
 #include "Display.h"
-
 class TextDisplay : public Display {
     std::vector<std::vector<char>> theDisplay;
     const int row;
@@ -26,6 +22,4 @@ public:
     // notify() prints the display in text format
     void notify() override;
 };
-
-
-#endif //BIQUADRIS_TEXTDISPLAY_H
+#endif /* TextDispaly_h */

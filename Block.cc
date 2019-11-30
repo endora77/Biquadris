@@ -1,9 +1,10 @@
 #include "Block.h"
 #include "Enums.h"
+#include "Cell.h"
 #include <utility>
 
 // calcPosition(MoveType type, int num) returns the pointer to the position of the first cell
-std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type){
+std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type) const{
     std::unique_ptr<std::pair<int, int>[]> calculates(new std::pair<int, int>[numCells]);
     int i = 0;
     for (auto& c: cells){
@@ -39,7 +40,7 @@ std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type){
     }
     return calculates;
 }
-void Block::furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates){
+void Block::furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates, const int numCells){
     switch(type){
         case MoveType::moveDown: {
             for (int i = 0; i < numCells; i++){
@@ -107,8 +108,8 @@ void Block::notify(){
 
 bool Block::checkExist() {
     int i = 0;
-    for(auto&c : cells){
-        if(c.getState()) break;
+    for(auto&a : cells){
+        if(a.getState()) break;
         i++;
     }
     if (i == numCells) return false;
