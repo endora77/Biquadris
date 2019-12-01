@@ -7,15 +7,15 @@
 
 //Safe to include block.h, blocks would notify the board.
 #include "Block.h"
-#include "BlockFiles/ZBlock.h"
-#include "BlockFiles/LBlock.h"
-#include "BlockFiles/IBlock.h"
-#include "BlockFiles/JBlock.h"
-#include "BlockFiles/OBlock.h"
-#include "BlockFiles/SBlock.h"
-#include "BlockFiles/TBlock.h"
-#include "BlockFiles/StarBlock.h"
-
+#include "ZBlock.h"
+#include "LBlock.h"
+#include "IBlock.h"
+#include "JBlock.h"
+#include "OBlock.h"
+#include "SBlock.h"
+#include "TBlock.h"
+#include "StarBlock.h"
+#include "iostream"
 //Safe to include
 #include "Observer.h"
 #include "Enums.h"
@@ -33,23 +33,22 @@ class Board final: public Observer{
     int numDeleted;
     int totalScore;
     int tempScore;
-    std::unique_ptr<Level>& level;
     
 public:
     friend class Player;
     friend class TextDisplay;
     Block* currentBlock;
 
-    Board(std::unique_ptr<Level>& level, const int height = 15, const int width = 11):
-        gridH{height}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}, level{level}{
+    Board(const int height = 15, const int width = 11):
+        gridH{height + 3}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}{
         std::vector<Cell*> temp(gridW, nullptr);
         for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
     }
 
-    Block* newBlock(const BlockType type, const int row, const int col);
+    Block* newBlock(const BlockType type, const int row, const int col, const int level);
     int checkColBot(int col);
-    bool checkPosition(const std::unique_ptr<std::pair<int, int>[]>& pos) const;
-    void checkFilledLines();
+    bool checkPosition(Block* checkBlock, const std::unique_ptr<std::pair<int, int>[]>& pos);
+    void checkFilledLines(const Level* level);
     void addStar();
     void deleteRow(int row);
     bool checkTop();

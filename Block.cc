@@ -38,7 +38,7 @@ std::unique_ptr<std::pair<int, int>[]> Block::calcPosition(const MoveType type) 
             counterClockwise(calculates, numCells);
         }
     }
-    return calculates;
+    return std::move(calculates);
 }
 void Block::furtherCalculates(const MoveType type, std::unique_ptr<std::pair<int, int>[]>& calculates, const int numCells){
     switch(type){

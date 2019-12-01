@@ -24,23 +24,25 @@ class Player final: public Subject{
     int seed;
     Block* currentBlock;
     bool success;
-    BlockType nextType;
     void getHorizontalDowns(std::unique_ptr<std::pair<int, int>[]>& pos, int& downs, const int blockSize);
 public:
+    BlockType nextType;
     Restriction restriction;
     BlockType forcedType;
+    bool playing;
     std::unique_ptr<Board> board;
     Player(std::string name, const int lev, std::vector<std::unique_ptr<Observer>>& displays,
-        const int height = 15, const int width = 11, int seed = 0, const std::string file0 = "no_file_specified"): 
-        name{name}, file0 {file0}{
+        const int height = 15, const int width = 11, int seed = 0, const std::string file0 = "no_file_specified"):
+    name{name}, file0 {file0}, restriction{Restriction::noRestriction},playing{false}{
             for(auto& a : displays){
                 attach(a.get());
             }
             setLevel(lev, seed);
             currentLevel = lev;
-            board = std::make_unique<Board>(this->level, height, width);
+            board = std::make_unique<Board>(height, width);
             this->seed = seed;
             success = true;
+            nextType = level->nextBlock();
         }
     
     std::string getName()const;
@@ -49,8 +51,9 @@ public:
     int getScore() const;
 
     void setLevel(const int l, unsigned int seed);
-    void getNextBlock();
+    bool getNextBlock();
     void down();
+    void pureDown();
     void left();
     void right();
     void rotateClockwise();
@@ -66,6 +69,7 @@ public:
     void rand(){
         level->setRandom();
     }
+    bool setBlock(BlockType type);
     friend class TextDisplay;
 };
 

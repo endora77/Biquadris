@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "Player.h"
 using namespace std;
-//OK
+
 void Game::readNext(std::string& cmd){
     if((*in) >>cmd){}
     else{
@@ -12,62 +12,72 @@ void Game::readNext(std::string& cmd){
     }
 }
 
-//OK
 void Game::newRound(){
- int times = 0;
- std::string cmd;
- readNext(cmd);
- c.getCommand(cmd, currentCommand, times);
- while(true){
-     if(currentCommand == Command::quit) return;
-     if(currentCommand == Command::drop){
-         players[currentPlayer].drop();
-         readNext(cmd);
-         c.getCommand(cmd, currentCommand, times);
-         if(currentCommand == Command::blind || currentCommand == Command::heavy || currentCommand == Command::force){
-             specialEffects();
-         }
-         //Always return after drop, no matter success or fail. Check success or fail in the upper function.
-         return;
-     }
-     readNext(cmd);
-     c.getCommand(cmd, currentCommand, times);
-     excecute();
- }
+    std::string cmd;
+    players[currentPlayer].notifyObservers();
+
+    while(true){
+        int times = 1;
+        do{
+            readNext(cmd);
+        }while(!c.getCommand(cmd, currentCommand, times));
+        if(currentCommand == Command::quit) return;
+        excecute(times);
+        if(currentCommand == Command::drop){
+            specialEffects();
+            return;
+        }
+    }
 }
 
-void Game::excecute(){
+void Game::excecute(const int times){
      Player* p = &players[currentPlayer];
      switch (currentCommand){
+         case Command::drop:{
+             p->drop();
+             break;
+         }
          case Command::left:{
-             p->left();break;
+             for(int i = 0; i < times; i++)p->left();
+             break;
          }
          case Command::right:{
-             p->right();break;
+             for(int i = 0; i < times; i++)p->right();
+             break;
          }
          case Command::down:{
-             p->down();break;
+             for(int i = 0; i < times; i++)p->down();
+             break;
          }
          case Command::clockwise:{
-             p->rotateClockwise();break;
+             for(int i = 0; i < times; i++)p->rotateClockwise();
+             break;
          }
          case Command::counterclockwise:{
-             p->rotateCounterClockwise();break;
+             for(int i = 0; i < times; i++)p->rotateCounterClockwise();
+             break;
          }
          case Command::levelup:{
-             try{
-                 p->levelUp();
-             }catch(const char* m){
-                 out << m << std::endl;
+             for(int i = 0; i < times; i++){
+                 try{
+                     p->levelUp();
+                 }catch(const char* m){
+                     out << m << std::endl;
+                     p->levelDown();
+                 }
              }
              break;
          }
          case Command::leveldown:{
-             try{
-                 p->levelDown();
-             }catch(const char* m){
-                 out << m << std::endl;
-             }break;
+             for(int i = 0; i < times; i++){
+                 try{
+                     p->levelDown();
+                 }catch(const char* m){
+                     out << m << std::endl;
+                     p->levelUp();
+                 }
+             }
+             break;
          }
          case Command::force:
          case Command::blind:
@@ -107,6 +117,10 @@ void Game::excecute(){
      players[0].restart();
      players[1].restart();
      currentPlayer = 0;
+     players[0].playing = true;
+     players[1].playing = false;
+     players[currentPlayer].getNextBlock();
+     players[!currentPlayer].getNextBlock();
  }
  void Game::setBlockType(){
      players[currentPlayer].restriction = Restriction::forced;
@@ -136,10 +150,16 @@ void Game::excecute(){
  }
 
  void Game::specialEffects(){
-     int times = 0;
-     std::string cmd;
      if(players[currentPlayer].getLinesDeleted() >= 2){
+         out << "You have deleted "<<players[currentPlayer].getLinesDeleted()<<", now you can use special effects."<<endl;
+         int times = 0;
+         std::string cmd;
+         readNext(cmd);
+         do{
+             readNext(cmd);
+         }while(!c.getCommand(cmd, currentCommand, times));
          switch(currentCommand){
+             case Command::noeffect:break;
              case Command::blind:{
                  players[!currentPlayer].restriction = Restriction::blind;
              }
@@ -151,7 +171,9 @@ void Game::excecute(){
                  while(true){
                      try{
                          readNext(cmd);
-                         c.getCommand(cmd, currentCommand, times);
+                         do{
+                             readNext(cmd);
+                         }while(!c.getCommand(cmd, currentCommand, times));
                          players[!currentPlayer].forcedType = c.getBlockType(currentCommand);
                      }catch(const char*m){
                          out << m << std::endl;
@@ -161,10 +183,6 @@ void Game::excecute(){
                  }
              }
          }
-     }
-     else{
-         out << "You have only deleted " <<players[currentPlayer].getLinesDeleted()
-             <<" lines this time, you are not allowed to use special effects"<< std::endl;
      }
  }
 
@@ -186,11 +204,23 @@ void Game::excecute(){
      out << winner <<" has won."<<std::endl;
  }
 
+void Game::switchPlayer(){
+    currentPlayer = !currentPlayer;
+    players[currentPlayer].playing = true;
+    players[!currentPlayer].playing = false;
+}
 
  void Game::run(){
      while(true){
          while(true){
              newRound();
+             if(!players[currentPlayer].getNextBlock()){
+                 //players[currentPlayer].nextType
+                 out << "Not enough space for the next block for "<<players[currentPlayer].getName()<<" with block type"<< endl;
+                 endGame();
+                 restart();
+                 break;
+             }
              if(currentCommand == Command::quit) break;
              //End the game if not successful
              if(players[currentPlayer].getState() == false){
@@ -198,7 +228,7 @@ void Game::excecute(){
                  restart();
                  break;
              }
-             currentPlayer = !currentPlayer;
+             switchPlayer();
          }
          if(currentCommand == Command::quit){
              endGame();

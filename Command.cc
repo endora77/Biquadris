@@ -2,13 +2,8 @@
 #include "Command.h"
 #include <string>
 int Command::getNumber(std::string temp, std::ostream& out){
-  int n = 0;
-  try{
-    n = stoi(temp);
-  }catch(...){
-    out << "Unable to convert " << temp <<" to a number" <<std::endl;
-    exit(-1);
-  }
+  int n = 1;
+  if(temp[0] >= 48 && temp[0] <=57) n = stoi(temp);
   return n;
 }
 
@@ -22,8 +17,12 @@ Command::type Command::getSubCommand(const std::string subCmd){
     if(!f) return type::force;
     temp = "quit"; f = (int)temp.find(subCmd);
     if(!f) return type::quit;
-    temp = "norandom"; f = (int)temp.find(subCmd);
-    if(!f) return type::norandom;
+    if(subCmd != "no"){
+        temp = "norandom"; f = (int)temp.find(subCmd);
+        if(!f) return type::norandom;
+        temp = "noeffect"; f = (int)temp.find(subCmd);
+        if(!f) return type::noeffect;
+    }
     temp = "sequence"; f = (int)temp.find(subCmd);
     if(!f) return type::sequence;
     if(subCmd != "le" && subCmd != "level"){
@@ -94,26 +93,23 @@ BlockType Command::getBlockType(const type t){
         throw "Not a valid Block type";
 }
 
-void Command::getCommand(std::string cmd, Command::type &c, int& times){
-    while(true){
-        try{
-            std::string subCmd;
-            times = stoi(cmd);
-            getNumber(cmd, out);
-            std::string firstChar;
-            for (const char& c : cmd){
-                if(c < 48 || c > 57){
-                    firstChar = c;
-                    break;
-                }
+bool Command::getCommand(std::string cmd, Command::type &c, int& times){
+    try{
+        std::string subCmd;
+        times = getNumber(cmd, out);
+        std::string firstChar;
+        for (const char& c : cmd){
+            if(c < 48 || c > 57){
+                firstChar = c;
+                break;
             }
-            subCmd = cmd.substr(cmd.find(firstChar));
-            c = getSubCommand(subCmd);
-            out << cmd << std::endl;
-        }catch(const char* m){
-            out << m << std::endl;
-            continue;
         }
-        break;
+        subCmd = cmd.substr(cmd.find(firstChar));
+        c = getSubCommand(subCmd);
+        out << cmd << std::endl;
+    }catch(const char* m){
+        out << m << std::endl;
+        return false;
     }
+    return true;
 }

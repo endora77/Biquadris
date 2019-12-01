@@ -14,7 +14,7 @@ public:
             levelup, leveldown, 
             norandom, random, 
             sequence, restart,
-            blind, heavy, force, quit,
+            blind, heavy, force, noeffect, quit,
             I, J, L, O, S, T, Z};
     Command(std::ostream& out): out{out}{}
 private:
@@ -24,7 +24,7 @@ public:
     static BlockType getBlockType(const char t);
     static BlockType getBlockType(const type t);
     static int getNumber(std::string temp, std::ostream& out);
-    void getCommand(std::string cmd, Command::type &c, int& times);
+    bool getCommand(std::string cmd, Command::type &c, int& times);
 };
 
 #endif 

@@ -1,22 +1,22 @@
 #include "TextDisplay.h"
 using namespace std;
 // Constructor
-TextDisplay::TextDisplay(int row, int column) : row{row + 10}, column{column}, out{std::cout} {
+TextDisplay::TextDisplay(Game* game, int row, int column) : row{row + 10}, column{column}, out{std::cout}, Display{game} {
     // Display the first two rows (Level, score)
     init("Level:");
     init("Score:");
     // Display the dashes
     init("dashes");
-    // Initialize the three reserved empty row
-    init("empty");
-    // Initialize the boardß
-    for (int i = 0; i < row; i += 1) {
+    // Initialize the board
+    for (int i = 0; i < row + 3; i += 1) {
         init("empty");
     }
     // Display the dashes
     init("dashes");
     // Display the Next
     init("Next:");
+    init("empty");
+    init("empty");
 }
 
 // Helper function to initialize boards for two players
@@ -29,16 +29,19 @@ void TextDisplay::init(string type) {
             r.emplace_back(type[i]);
         }
         // Print middle empty space
-        for (int i = 0; i < 6; i += 1) {
+        for (int i = 0; i < 12; i += 1) {
             r.emplace_back(' ');
         }
         // Set up for Player 2
         for (int i = 0; i < size; i += 1) {
             r.emplace_back(type[i]);
         }
+        for (int i = 0; i < 6; i += 1) {
+            r.emplace_back(' ');
+        }
     } else if (type == "dashes") {
         // Set up for Player 1
-        for (int i = 0; i < row; i += 1) {
+        for (int i = 0; i < column; i += 1) {
             r.emplace_back('-');
         }
         // Print middle empty space
@@ -46,12 +49,12 @@ void TextDisplay::init(string type) {
             r.emplace_back(' ');
         }
         // Set up for Player 2
-        for (int i = 0; i < row; i += 1) {
+        for (int i = 0; i < column; i += 1) {
             r.emplace_back('-');
         }
     } else if (type == "empty") {
         // Set up for Player 1
-        for (int i = 0; i < (2 * row + 6); i += 1) {
+        for (int i = 0; i < (2 * column + 6); i += 1) {
             r.emplace_back(' ');
         }
     } else { // type is "Level:" or "Score:"
@@ -103,27 +106,30 @@ void TextDisplay::fillBlock() {
         for (int j = 0; j < game->players[i].board->gridH; j += 1) {
             // Access each column
             for (int k = 0; k < game->players[i].board->gridW; k += 1) {
-                BlockType type = game->players[i].board->grid[i][j]->getType();
-                if (type == BlockType::IBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'I';
-                }
-                if (type == BlockType::JBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'J';
-                }
-                if (type == BlockType::LBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'L';
-                }
-                if (type == BlockType::OBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'O';
-                }
-                if (type == BlockType::SBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'S';
-                }
-                if (type == BlockType::ZBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'Z';
-                }
-                if (type == BlockType::TBlock) {
-                    theDisplay[j + 3][k + i * 17] = 'T';
+                if(!game->players[i].board->grid[j][k])theDisplay[j + 3][k + i * 17] = ' ';
+                else{
+                    BlockType type = game->players[i].board->grid[j][k]->getType();
+                    if (type == BlockType::IBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'I';
+                    }
+                    if (type == BlockType::JBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'J';
+                    }
+                    if (type == BlockType::LBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'L';
+                    }
+                    if (type == BlockType::OBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'O';
+                    }
+                    if (type == BlockType::SBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'S';
+                    }
+                    if (type == BlockType::ZBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'Z';
+                    }
+                    if (type == BlockType::TBlock) {
+                        theDisplay[j + 3][k + i * 17] = 'T';
+                    }
                 }
             }
         }
@@ -135,13 +141,13 @@ void TextDisplay::fillBlock() {
 void TextDisplay::fillTopInfo() {
     for (int i = 0; i < 2; i += 1) {
         int level = game->players[i].currentLevel;
-        int score = game->players[i].currentLevel;
-        theDisplay[0][10 + i * 17] = static_cast<char>(level);
+        int score = game->players[i].getScore();
+        theDisplay[0][10 + i * 17] = static_cast<char>(level + 48);
         if (score < 10) {
-            theDisplay[1][14 + i * 17] = static_cast<char>(score);
+            theDisplay[1][10 + i * 17] = static_cast<char>(score + 48);
         } else {
-            theDisplay[1][13 + i * 17] = static_cast<char>(score / 10);
-            theDisplay[1][14 + i * 17] = static_cast<char>(score % 10);
+            theDisplay[1][9 + i * 17] = static_cast<char>(score / 10 + 48);
+            theDisplay[1][10 + i * 17] = static_cast<char>(score % 10 + 48);
         }
     }
 }
@@ -150,60 +156,77 @@ void TextDisplay::fillTopInfo() {
 
 // fillNextBlock() displays the next Block shape in the bottom rows of the board
 void TextDisplay::fillNextBlock() {
+    for (int i = row - 2; i < row; i += 1) {
+        for (int j = 0; j < 28; j += 1) {
+            theDisplay[i][j] = ' ';
+        }
+    }
     for (int i = 0; i < 2; i += 1) {
+        if(!game->players[i].playing) continue;
         BlockType type = game->players[i].nextType;
         if (type == BlockType::IBlock) {
-            theDisplay[row + 9][0 + i * 17] = 'I';
-            theDisplay[row + 9][1 + i * 17] = 'I';
-            theDisplay[row + 9][2 + i * 17] = 'I';
-            theDisplay[row + 9][3 + i * 17] = 'I';
+            theDisplay[row - 1][0 + i * 17] = 'I';
+            theDisplay[row - 1][1 + i * 17] = 'I';
+            theDisplay[row - 1][2 + i * 17] = 'I';
+            theDisplay[row - 1][3 + i * 17] = 'I';
         }
         if (type == BlockType::JBlock) {
-            theDisplay[row + 8][0 + i * 17] = 'J';
-            theDisplay[row + 9][0 + i * 17] = 'J';
-            theDisplay[row + 9][1 + i * 17] = 'J';
-            theDisplay[row + 9][2 + i * 17] = 'J';
+            theDisplay[row - 2][0 + i * 17] = 'J';
+            theDisplay[row - 1][0 + i * 17] = 'J';
+            theDisplay[row - 1][1 + i * 17] = 'J';
+            theDisplay[row - 1][2 + i * 17] = 'J';
         }
         if (type == BlockType::LBlock) {
-            theDisplay[row + 8][2 + i * 17] = 'L';
-            theDisplay[row + 9][0 + i * 17] = 'L';
-            theDisplay[row + 9][1 + i * 17] ='L';
-            theDisplay[row + 9][2 + i * 17] ='L';
+            theDisplay[row - 2][2 + i * 17] = 'L';
+            theDisplay[row - 1][0 + i * 17] = 'L';
+            theDisplay[row - 1][1 + i * 17] ='L';
+            theDisplay[row - 1][2 + i * 17] ='L';
         }
         if (type == BlockType::OBlock) {
-            theDisplay[row + 8][0 + i * 17] = 'O';
-            theDisplay[row + 8][1 + i * 17] = 'O';
-            theDisplay[row + 9][0 + i * 17] = 'O';
-            theDisplay[row + 9][1 + i * 17] = 'O';
+            theDisplay[row - 2][0 + i * 17] = 'O';
+            theDisplay[row - 2][1 + i * 17] = 'O';
+            theDisplay[row - 1][0 + i * 17] = 'O';
+            theDisplay[row - 1][1 + i * 17] = 'O';
         }
         if (type == BlockType::SBlock) {
-            theDisplay[row + 8][1 + i * 17] = 'S';
-            theDisplay[row + 8][2 + i * 17] = 'S';
-            theDisplay[row + 9][0 + i * 17] = 'S';
-            theDisplay[row + 9][1 + i * 17] = 'S';
+            theDisplay[row - 2][1 + i * 17] = 'S';
+            theDisplay[row - 2][2 + i * 17] = 'S';
+            theDisplay[row - 1][0 + i * 17] = 'S';
+            theDisplay[row - 1][1 + i * 17] = 'S';
         }
         if (type == BlockType::ZBlock) {
-            theDisplay[row + 8][0 + i * 17] = 'Z';
-            theDisplay[row + 8][1 + i * 17] = 'Z';
-            theDisplay[row + 9][1 + i * 17] = 'Z';
-            theDisplay[row + 9][2 + i * 17] = 'Z';
+            theDisplay[row + 8 - 10][0 + i * 17] = 'Z';
+            theDisplay[row + 8 - 10][1 + i * 17] = 'Z';
+            theDisplay[row + 9 - 10][1 + i * 17] = 'Z';
+            theDisplay[row + 9 - 10][2 + i * 17] = 'Z';
         }
         if (type == BlockType::TBlock) {
-            theDisplay[row + 8][0 + i * 17] = 'T';
-            theDisplay[row + 8][1 + i * 17] = 'T';
-            theDisplay[row + 8][2 + i * 17] = 'T';
-            theDisplay[row + 9][1 + i * 17] = 'T';
+            theDisplay[row + 8 - 10][0 + i * 17] = 'T';
+            theDisplay[row + 8 - 10][1 + i * 17] = 'T';
+            theDisplay[row + 8 - 10][2 + i * 17] = 'T';
+            theDisplay[row + 9 - 10][1 + i * 17] = 'T';
         }
     }
 }
 
 void TextDisplay::notify() {
-    int row = (int)theDisplay.size();
+    fillTopInfo();
+    fillBlind();
+    fillBlock();
+    fillNextBlock();
+    print();
+}
+
+void TextDisplay::print(){
+    out << endl;
+    out << "*****************************************"<<endl;
+    int columns = (int)(2*column + 6);
     for (int i = 0; i < row; i += 1) {
-        int column = (int)theDisplay[i].size();
-        for (int j = 0; j < (2 * column + 6); j += 1) {
+        for (int j = 0; j < columns; j += 1) {
             out << theDisplay[i][j];
         }
         out << endl;
     }
+    out << "*****************************************"<<endl;
+    out << endl;
 }

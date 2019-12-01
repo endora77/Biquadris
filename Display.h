@@ -11,7 +11,7 @@
 class Display : public Observer {
 protected:
     Game *game;
-
+    Display(Game* game): game{game}{}
     // Methods
     virtual void init(std::string name) = 0;
     virtual void fillBlind() = 0;

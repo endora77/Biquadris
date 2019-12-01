@@ -27,21 +27,39 @@ void Player::setLevel(const int l, unsigned int seed){
     }
 }
 
-void Player::getNextBlock(){
+bool Player::getNextBlock(){
     BlockType type;
     if(restriction == Restriction::forced) type = forcedType;
     else type = nextType;
-    currentBlock = board->newBlock(type, 0, 3);
+    currentBlock = board->newBlock(type, 1, 0, level->level);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
+    Block::furtherCalculates(MoveType::moveDown, pos, 4);
+    for( int i = 0; i < 4; i++){
+        if(board->grid[pos[i].first][pos[i].second]){
+            success = false;
+            return false;
+        }
+    }
+    board->addBlock(currentBlock);
     nextType = level->nextBlock();
+    return true;
 }
 
 void Player::down(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
-    if(board->checkPosition(pos)){
+    if(board->checkPosition(currentBlock,pos)){
         board->eraseBlock(currentBlock);
         currentBlock->down();
         board->addBlock(currentBlock);
-        if(level->applyHeavy()) down();
+        if(level->applyHeavy()) pureDown();
+    }
+}
+void Player::pureDown(){
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
+    if(board->checkPosition(currentBlock,pos)){
+        board->eraseBlock(currentBlock);
+        currentBlock->down();
+        board->addBlock(currentBlock);
     }
 }
 void Player::getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs, const int blockSize){
@@ -57,7 +75,7 @@ void Player::left(){
     getHorizontalDowns(pos, downs,currentBlock->getSize());
 
     //Move the block if possible, if no space left below, cannot move, must down or drop.
-    if(board->checkPosition(pos)){
+    if(board->checkPosition(currentBlock, pos)){
         board->eraseBlock(currentBlock);
         currentBlock->left();
         for( int i = 0; i < downs; i++) currentBlock->down();
@@ -71,7 +89,7 @@ void Player::right(){
     getHorizontalDowns(pos, downs, currentBlock->getSize());
 
     //Move the block if possible, if no space left below, cannot move, must down or drop.
-    if(board->checkPosition(pos)){
+    if(board->checkPosition(currentBlock,pos)){
         board->eraseBlock(currentBlock);
         currentBlock->right();
         for( int i = 0; i < downs; i++) currentBlock->down();
@@ -82,7 +100,7 @@ void Player::right(){
 void Player::rotateClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
     if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
-    if(board->checkPosition(pos)){
+    if(board->checkPosition(currentBlock, pos)){
         board->eraseBlock(currentBlock);
         currentBlock->Clockwise();
         currentBlock->down();
@@ -93,7 +111,7 @@ void Player::rotateClockwise(){
 void Player::rotateCounterClockwise(){
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
     if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
-    if(board->checkPosition(pos)){
+    if(board->checkPosition(currentBlock, pos)){
         board->eraseBlock(currentBlock);
         currentBlock->counterClockwise();
         currentBlock->down();
@@ -103,19 +121,23 @@ void Player::rotateCounterClockwise(){
 
 void Player::drop(){
     const vector<Cell>& c = currentBlock->getCells();
-    int lowest = board->gridH;
-    int touchedCell = 0;
-    int i = 0; 
+    int smallestDif = board->gridH - 1;
+    int i = 0;
+    int difCol = -1;
     for(;i < 4; i++){
         pair<int, int> pos = c[i].getPosition();
-        int temp = board->checkColBot(pos.second);
-        if(temp < lowest){
-            touchedCell = i;
-            lowest = temp;
-        } 
+        int colLowest = board->checkColBot(pos.second);
+        int temp = colLowest - pos.first;
+        if(difCol == i){
+            if(temp > smallestDif) smallestDif = temp;
+        }
+        if(temp < smallestDif) {
+            difCol = i;
+            smallestDif = temp;
+        }
     }
-    int shift = lowest - c[i].getPosition().first;
-    for(int j = 0; j < shift; j++)down();
+    for(int j = 0; j < smallestDif; j++)pureDown();;
+    board->checkFilledLines(level.get());
     resetRestrictions();
     if(board->checkTop()) success = false;
 }
@@ -157,4 +179,10 @@ int Player::getState()const{
 
 int Player::getLinesDeleted(){
     return board->getLinesDeleted();
+}
+
+bool Player::setBlock(BlockType type){
+    board->eraseBlock(currentBlock);
+    currentBlock = board->newBlock(type, currentBlock->getCells()[0].getPosition().first, currentBlock->getCells()[0].getPosition().second, 0);
+    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
 }

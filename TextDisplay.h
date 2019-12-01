@@ -8,7 +8,7 @@ class TextDisplay : public Display {
     std::ostream &out;
 public:
     // Constructor
-    TextDisplay(int row = 15, int column = 11);
+    TextDisplay(Game* game, int row = 15, int column = 11);
     // init(string name) is a helper function to initialize textdisplay of the board(level, score, next)
     void init(std::string name) override;
     // fillBlind() fills the column 3-9, and row 3-12 with "?" until the player drops a block
@@ -21,5 +21,6 @@ public:
     void fillNextBlock() override;
     // notify() prints the display in text format
     void notify() override;
+    void print();
 };
 #endif /* TextDispaly_h */

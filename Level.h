@@ -21,12 +21,13 @@ public:
     Level(unsigned int seed, bool star, bool heavy, int level):
         seed{seed}, star{star}, heavy{heavy}, level{level},
         randomApply{false}, randomSwitch{true}{}
-    bool addStar(){ return star; };
-    bool applyHeavy(){ return heavy;};
+    bool addStar()const{ return star; };
+    bool applyHeavy()const { return heavy;};
     BlockType readNextBlock();
     
     //Virtual methods below:
     virtual BlockType nextBlock() = 0;
+    virtual ~Level(){}
     virtual bool setRandom(){ return false; }
     virtual bool unsetRandom(const std::string file){ return false;}
 };

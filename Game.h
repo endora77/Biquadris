@@ -7,20 +7,19 @@
 //Player does not need to know about game, so it's safe
  #include "Player.h"
 #include "Observer.h"
-class Player;
-class Display;
+
 class Game final{
     std::istream *in;
     std::ifstream temp_in;
     std::istream &original_in;
     std::ostream &out;
-    std::vector<std::unique_ptr<Observer*>> displays;
+    std::vector<std::unique_ptr<Observer>> displays;
     std::vector<Player> players;
     int currentPlayer;
     Command c;
     Command::type currentCommand;
     void newRound();
-     void excecute();
+     void excecute(const int times);
      void restart();
      void setBlockType();
      void specialEffects();
@@ -30,19 +29,31 @@ class Game final{
     //Init OK
     int Init(const std::string name1, const std::string name2, const int seed, const std::string script1, const std::string script2,
              const int startLevel, std::vector<std::unique_ptr<Observer>>displays, const int height, const int width){
+        this->displays = std::move(displays);
         in = &original_in;
-        if(script1.length())
-            players.emplace_back(name1, startLevel, displays, height, width, seed, script1);
-        else
-            players.emplace_back(name1, startLevel, displays, height, width, seed);
-        if(script2.length())
-            players.emplace_back(name2, startLevel, displays, height, width, seed, script2);
-        else
-            players.emplace_back(name2, startLevel, displays, height, width, seed);
+        if(addPlayer(name1, startLevel, this->displays, height, width, seed, script1)) return -1;
+        if(addPlayer(name2, startLevel, this->displays, height, width, seed, script2)) return -1;
         currentPlayer = 0;
+        players[currentPlayer].playing = true;
+        players[!currentPlayer].playing = false;
+        players[currentPlayer].getNextBlock();
+        players[!currentPlayer].getNextBlock();
+        return 0;
+    }
+    int addPlayer(std::string name, const int startLevel, std::vector<std::unique_ptr<Observer>>&displays, const int height, const int width, const unsigned int seed, const std::string script){
+        try{
+            if(script.length())
+                players.emplace_back(name, startLevel, displays, height, width, seed, script);
+            else
+                players.emplace_back(name, startLevel, displays, height, width, seed);
+        }catch(std::string m){
+            out << m <<std::endl;
+            return -1;
+        }
         return 0;
     }
     void run();
+    void switchPlayer();
     Game(std::istream &in, std::ostream &out): original_in{in}, out{out}, c{out}{}
     friend class TextDisplay;
 
