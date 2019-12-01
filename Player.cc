@@ -5,8 +5,12 @@ using namespace std;
 void Player::setLevel(const int l, unsigned int seed){
     switch(l){
         case 0:{
-            level = make_unique<LevelZero>(file0);
-            break;
+            if(!(file0 == "no_file_specified" || file0 == "")){
+                level = make_unique<LevelZero>(file0);
+                break;
+            }else{
+                throw "Error: No sequence file for level zero.";
+            }
         }
         case 1:{
             level = make_unique<LevelOne>(seed);
@@ -40,83 +44,102 @@ bool Player::getNextBlock(){
             return false;
         }
     }
+    currentBlock->down();
+    currentBlock->down();
     board->addBlock(currentBlock);
     nextType = level->nextBlock();
     return true;
 }
 
-void Player::down(){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
-    if(board->checkPosition(currentBlock,pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->down();
-        board->addBlock(currentBlock);
-        if(level->applyHeavy()) pureDown();
+void Player::down(const int times){
+    for(int i = 0; i < times; i++){
+        unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
+        if(board->checkPosition(currentBlock,pos)){
+            board->eraseBlock(currentBlock);
+            currentBlock->down();
+            board->addBlock(currentBlock);
+        }
     }
 }
-void Player::pureDown(){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
-    if(board->checkPosition(currentBlock,pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->down();
-        board->addBlock(currentBlock);
-    }
-}
+
 void Player::getHorizontalDowns(unique_ptr<pair<int, int>[]>& pos, int& downs, const int blockSize){
     if(level->applyHeavy()) downs ++;
     if(restriction == Restriction::specialHeavy) downs += 2;
     for( int i = 0; i < downs; i++) Block::furtherCalculates(MoveType::moveDown, pos, blockSize);
 }
 
-void Player::left(){
-    //Calculate position:
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft);
-    int downs = 0;
-    getHorizontalDowns(pos, downs,currentBlock->getSize());
-
-    //Move the block if possible, if no space left below, cannot move, must down or drop.
-    if(board->checkPosition(currentBlock, pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->left();
-        for( int i = 0; i < downs; i++) currentBlock->down();
-        board->addBlock(currentBlock);
+void Player::left(const int times){
+    bool moved = false;
+    for(int i = 0; i < times; i++){
+        //Calculate position:
+        unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveLeft);
+        //int downs = 0;
+        //getHorizontalDowns(pos, downs,currentBlock->getSize());
+        //Move the block if possible, if no space left below, cannot move, must down or drop.
+        if(board->checkPosition(currentBlock, pos)){
+            moved = true;
+            board->eraseBlock(currentBlock);
+            currentBlock->left();
+            board->addBlock(currentBlock);
+        }
+    }
+    if(moved){
+        int downs = 0;
+        if(level->applyHeavy()) downs ++;
+        if(restriction == Restriction::specialHeavy) downs += 2;
+        down(downs);
     }
 }
 
-void Player::right(){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight);
-    int downs = 0;
-    getHorizontalDowns(pos, downs, currentBlock->getSize());
-
-    //Move the block if possible, if no space left below, cannot move, must down or drop.
-    if(board->checkPosition(currentBlock,pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->right();
-        for( int i = 0; i < downs; i++) currentBlock->down();
-        board->addBlock(currentBlock);
+void Player::right(const int times){
+    bool moved = false;
+    for(int i = 0; i < times; i++){
+        unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveRight);
+        //int downs = 0;
+        //getHorizontalDowns(pos, downs, currentBlock->getSize());
+        if(board->checkPosition(currentBlock,pos)){
+            moved = true;
+            board->eraseBlock(currentBlock);
+            currentBlock->right();
+            board->addBlock(currentBlock);
+        }
+    }
+    if(moved){
+        int downs = 0;
+        if(level->applyHeavy()) downs ++;
+        if(restriction == Restriction::specialHeavy) downs += 2;
+        down(downs);
     }
 }
 
-void Player::rotateClockwise(){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
-    if(board->checkPosition(currentBlock, pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->Clockwise();
-        currentBlock->down();
-        board->addBlock(currentBlock);
-    } 
+void Player::rotateClockwise(const int times){
+    bool moved = false;
+    for(int i = 0; i < times; i++){
+        unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
+        //if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
+        if(board->checkPosition(currentBlock, pos)){
+            moved = true;
+            board->eraseBlock(currentBlock);
+            currentBlock->Clockwise();
+            board->addBlock(currentBlock);
+        }
+    }
+    if(moved && level->applyHeavy())down(1);
 }
 
-void Player::rotateCounterClockwise(){
-    unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
-    if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
-    if(board->checkPosition(currentBlock, pos)){
-        board->eraseBlock(currentBlock);
-        currentBlock->counterClockwise();
-        currentBlock->down();
-        board->addBlock(currentBlock);
+void Player::rotateCounterClockwise(const int times){
+    bool moved = false;
+    for(int i = 0; i < times; i++){
+        unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveClockwise);
+        //if(level->applyHeavy()) Block::furtherCalculates(MoveType::moveDown, pos, currentBlock->getSize());
+        if(board->checkPosition(currentBlock, pos)){
+            moved = true;
+            board->eraseBlock(currentBlock);
+            currentBlock->counterClockwise();
+            board->addBlock(currentBlock);
+        }
     }
+    if(moved && level->applyHeavy())down(1);
 }
 
 void Player::drop(){
@@ -136,7 +159,7 @@ void Player::drop(){
             smallestDif = temp;
         }
     }
-    for(int j = 0; j < smallestDif; j++)pureDown();;
+    down(smallestDif);
     board->checkFilledLines(level.get());
     resetRestrictions();
     if(board->checkTop()) success = false;
@@ -183,6 +206,16 @@ int Player::getLinesDeleted(){
 
 bool Player::setBlock(BlockType type){
     board->eraseBlock(currentBlock);
-    currentBlock = board->newBlock(type, currentBlock->getCells()[0].getPosition().first, currentBlock->getCells()[0].getPosition().second, 0);
+    Block* lastBlock = currentBlock;
+    currentBlock = board->newBlock(type, lastBlock->getCells()[0].getPosition().first, lastBlock->getCells()[0].getPosition().second, 0);
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
+    if(!board->checkPosition(currentBlock, pos)){
+        currentBlock = lastBlock;
+        board->addBlock(lastBlock);
+        return false;
+    }else{
+        board->addBlock(currentBlock);
+        board->currentBlock = currentBlock;
+        return true;
+    }
 }

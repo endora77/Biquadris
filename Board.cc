@@ -32,7 +32,7 @@ void Board::checkFilledLines(const Level* level){
 bool Board::checkPosition(Block* checkBlock, const unique_ptr<pair<int, int>[]>& pos){
     eraseBlock(checkBlock);
     for( int i = 0; i < 4; i++){
-        if(grid[pos[i].first][pos[i].second]){
+        if(pos[i].first >= gridH || pos[i].second >= gridW || grid[pos[i].first][pos[i].second]){
             addBlock(checkBlock);
             return false;
         }
@@ -62,14 +62,20 @@ void Board::deleteRow(int row){
         grid[row][i]->setPosition(-1, -1);
         grid[row][i]->notifyObservers();
     }
+    for(int i = gridH - 1; i > 3; i--){
+        for(int j = 0; j < gridW; j++){
+            if(grid[i-1][j])grid[i-1][j]->moveDown();
+            grid[i][j] = grid[i-1][j];
+        }
+    }
 }
 
 void Board::addStar(){
     int mid = gridW/2;
     int lowest = checkColBot(mid);
-    std::unique_ptr<Block> b = make_unique<StarBlock>(StarBlock{0, mid, 0, this});
+    std::unique_ptr<Block> b = make_unique<StarBlock>(lowest, mid, 0, this);
     blocks.push_back(std::move(b));
-    grid[lowest][mid] = &(b->getCells()[0]);
+    grid[lowest][mid] = &(blocks.back()->getCells()[0]);
 }
 
 Block* Board::newBlock(const BlockType type, const int row, const int col, const int level){

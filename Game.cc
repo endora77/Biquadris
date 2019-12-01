@@ -3,7 +3,7 @@
 using namespace std;
 
 void Game::readNext(std::string& cmd){
-    if((*in) >>cmd){}
+    if((*in) >>cmd && cmd.size()){}
     else{
         if(in == &temp_in){
             in = &original_in;
@@ -22,7 +22,16 @@ void Game::newRound(){
             readNext(cmd);
         }while(!c.getCommand(cmd, currentCommand, times));
         if(currentCommand == Command::quit) return;
+        if(currentCommand == Command::drop){
+            players[currentPlayer].drop();
+            for(int i = 1; i < times; i++){
+                players[currentPlayer].getNextBlock();
+                players[currentPlayer].drop();
+            }
+            return;
+        }
         excecute(times);
+        players[currentPlayer].notifyObservers();
         if(currentCommand == Command::drop){
             specialEffects();
             return;
@@ -33,29 +42,20 @@ void Game::newRound(){
 void Game::excecute(const int times){
      Player* p = &players[currentPlayer];
      switch (currentCommand){
-         case Command::drop:{
-             p->drop();
-             break;
-         }
          case Command::left:{
-             for(int i = 0; i < times; i++)p->left();
-             break;
+             p->left(times);break;
          }
          case Command::right:{
-             for(int i = 0; i < times; i++)p->right();
-             break;
+             p->right(times);break;
          }
          case Command::down:{
-             for(int i = 0; i < times; i++)p->down();
-             break;
+             p->down(times);break;
          }
          case Command::clockwise:{
-             for(int i = 0; i < times; i++)p->rotateClockwise();
-             break;
+             p->rotateClockwise(times);break;
          }
          case Command::counterclockwise:{
-             for(int i = 0; i < times; i++)p->rotateCounterClockwise();
-             break;
+             p->rotateCounterClockwise(times);break;
          }
          case Command::levelup:{
              for(int i = 0; i < times; i++){
@@ -92,25 +92,38 @@ void Game::excecute(const int times){
          case Command::norandom:{
              std::string file_name;
              readNext(file_name);
-             players[currentPlayer].norand(file_name);
+             try{
+                 bool success = players[currentPlayer].norand(file_name);
+                 if(!success) throw "Cannot use norandom for this level.";
+             }catch(const char* m){
+                 std::cout << m << std::endl;
+             }
              break;
          }
          case Command::random:{
-             players[currentPlayer].rand();
+             try{
+                 bool success = players[currentPlayer].rand();
+                 if(!success) throw "Cannot use random for this level.";
+             }catch(const char* m){
+                 std::cout << m << std::endl;
+             }
+             break;
          }
          case Command::sequence:{
              std::string file_name;
              readNext(file_name);
              temp_in.open(file_name);
-             if(!temp_in.is_open())
+             if(!temp_in){
                  out << "Cannot open the sequence file " <<file_name<< std::endl;
+                 break;
+             }
              in = &temp_in;
+             break;
          }
          default:{
              setBlockType();
          }
      }
-     p->notifyObservers();
  }
 
  void Game::restart(){
@@ -126,25 +139,25 @@ void Game::excecute(const int times){
      players[currentPlayer].restriction = Restriction::forced;
      switch (currentCommand){
          case Command::I:{
-             players[currentPlayer].forcedType = BlockType::IBlock; break;
+             players[currentPlayer].setBlock(BlockType::IBlock);break;
          }
          case Command::J:{
-             players[currentPlayer].forcedType = BlockType::JBlock; break;
+             players[currentPlayer].setBlock(BlockType::JBlock);break;
          }
          case Command::L:{
-             players[currentPlayer].forcedType = BlockType::LBlock; break;
+             players[currentPlayer].setBlock(BlockType::LBlock);break;
          }
          case Command::O:{
-             players[currentPlayer].forcedType = BlockType::OBlock; break;
+             players[currentPlayer].setBlock(BlockType::OBlock);break;
          }
          case Command::S:{
-             players[currentPlayer].forcedType = BlockType::SBlock; break;
+             players[currentPlayer].setBlock(BlockType::SBlock); break;
          }
          case Command::T:{
-             players[currentPlayer].forcedType = BlockType::TBlock; break;
+             players[currentPlayer].setBlock(BlockType::TBlock); break;
          }
          case Command::Z:{
-             players[currentPlayer].forcedType = BlockType::ZBlock; break;
+             players[currentPlayer].setBlock(BlockType::ZBlock);break;
          }
      }
  }

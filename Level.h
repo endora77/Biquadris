@@ -13,14 +13,14 @@ protected:
     // Tell the Board whether heavy effect will apply when Block rotates in this level
     const bool heavy;
     bool randomApply;
-    bool randomSwitch;
+    bool isRandom;
     
 public:
     const int level;
     // Constructor
     Level(unsigned int seed, bool star, bool heavy, int level):
         seed{seed}, star{star}, heavy{heavy}, level{level},
-        randomApply{false}, randomSwitch{true}{}
+        randomApply{false}, isRandom{true}{}
     bool addStar()const{ return star; };
     bool applyHeavy()const { return heavy;};
     BlockType readNextBlock();

@@ -52,22 +52,22 @@ public:
 
     void setLevel(const int l, unsigned int seed);
     bool getNextBlock();
-    void down();
+    void down(const int times);
     void pureDown();
-    void left();
-    void right();
-    void rotateClockwise();
-    void rotateCounterClockwise();
+    void left(const int times);
+    void right(const int times);
+    void rotateClockwise(const int times);
+    void rotateCounterClockwise(const int times);
     void drop();
     void levelUp();
     void levelDown();
     int getState()const override;
     int getLinesDeleted();
-    void norand(const std::string file){
-       level->unsetRandom(file); 
+    bool norand(const std::string file){
+       return level->unsetRandom(file);
     }
-    void rand(){
-        level->setRandom();
+    bool rand(){
+        return level->setRandom();
     }
     bool setBlock(BlockType type);
     friend class TextDisplay;

@@ -130,6 +130,9 @@ void TextDisplay::fillBlock() {
                     if (type == BlockType::TBlock) {
                         theDisplay[j + 3][k + i * 17] = 'T';
                     }
+                    if (type == BlockType::StarBlock) {
+                        theDisplay[j + 3][k + i * 17] = '*';
+                    }
                 }
             }
         }

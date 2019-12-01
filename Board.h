@@ -40,7 +40,7 @@ public:
     Block* currentBlock;
 
     Board(const int height = 15, const int width = 11):
-        gridH{height + 3}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0}{
+    gridH{height + 3}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0},numDeleted{0}{
         std::vector<Cell*> temp(gridW, nullptr);
         for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
     }

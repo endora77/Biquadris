@@ -5,11 +5,12 @@
 
 LevelFour::LevelFour(unsigned int seed) : Level{seed, true, true, 4} {
     randomApply = true;
+    isRandom = true;
     srand(seed);
 }
 
 BlockType LevelFour::nextBlock() {
-    if(!randomSwitch){
+    if(isRandom){
         int r = rand() % 9;
         if ((r == 0) || (r == 1)) {
             return BlockType::SBlock;
@@ -32,16 +33,16 @@ BlockType LevelFour::nextBlock() {
 }
 
 bool LevelFour::setRandom(){
-    if(randomSwitch) throw "The sequence is already random.";
+    if(isRandom) throw "The sequence is already random.";
     in.close();
-    randomSwitch = true;
+    isRandom = true;
     return true;
 }
 
 bool LevelFour::unsetRandom(const std::string file){
-    if(!randomSwitch) throw "The sequence is already not random.";
+    if(!isRandom) throw "The sequence is already not random.";
     in.open(file.c_str());
-    if(!in.is_open()) throw "Cannot open file in levelthree";
-    randomSwitch = false;
+    if(!in) throw "Cannot open this file.";
+    isRandom = false;
     return true;
 }

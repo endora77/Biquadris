@@ -55,13 +55,13 @@ Command::type Command::getSubCommand(const std::string subCmd){
     }
     if(subCmd.length() == 1){
         switch(subCmd[0]){
-            case 'i': return I;
-            case 'j': return J;
-            case 'l': return L;
-            case 'o': return O;
-            case 's': return S;
-            case 't': return T;
-            case 'z': return Z;
+            case 'I': return I;
+            case 'J': return J;
+            case 'L': return L;
+            case 'O': return O;
+            case 'S': return S;
+            case 'T': return T;
+            case 'Z': return Z;
         }
     }
     throw "Not a valid command";
@@ -69,13 +69,13 @@ Command::type Command::getSubCommand(const std::string subCmd){
 
 BlockType Command::getBlockType(const char t){
         switch(t){
-            case 'i': return BlockType::IBlock;
-            case 'j': return BlockType::JBlock;
-            case 'l': return BlockType::LBlock;
-            case 'o': return BlockType::OBlock;
-            case 's': return BlockType::SBlock;
-            case 't': return BlockType::TBlock;
-            case 'z': return BlockType::ZBlock;
+            case 'I': return BlockType::IBlock;
+            case 'J': return BlockType::JBlock;
+            case 'L': return BlockType::LBlock;
+            case 'O': return BlockType::OBlock;
+            case 'S': return BlockType::SBlock;
+            case 'T': return BlockType::TBlock;
+            case 'Z': return BlockType::ZBlock;
         }
         throw "Not a valid Block type";
 }
@@ -94,6 +94,7 @@ BlockType Command::getBlockType(const type t){
 }
 
 bool Command::getCommand(std::string cmd, Command::type &c, int& times){
+    if(!cmd.size())return false;
     try{
         std::string subCmd;
         times = getNumber(cmd, out);
