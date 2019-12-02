@@ -13,8 +13,7 @@ class GraphicsDisplay: public Display {
     std::vector<std::vector<int>> theNextBlock;
     const int row;
     const int column;
-    const int cellHeight;//The size of the board
-    const int cellWidth;//The size of a single cell
+    const int cellSize;//The size of the board
 
     Xwindow *xw;
 
