@@ -143,14 +143,40 @@ void TextDisplay::fillBlock() {
 // fillTopInfo() displays the information on the top 3 rows (i.e. level, score, and and a line)
 void TextDisplay::fillTopInfo() {
     for (int i = 0; i < 2; i += 1) {
+        theDisplay[1][6 + i * 17] = ' ';
+        theDisplay[1][7 + i * 17] = ' ';
+        theDisplay[1][8 + i * 17] = ' ';
+        theDisplay[1][9 + i * 17] = ' ';
+        theDisplay[1][10 + i * 17] =  ' ';
         int level = game->players[i].currentLevel;
         int score = game->players[i].getScore();
         theDisplay[0][10 + i * 17] = static_cast<char>(level + 48);
         if (score < 10) {
             theDisplay[1][10 + i * 17] = static_cast<char>(score + 48);
-        } else {
+        } else if (score < 100){
             theDisplay[1][9 + i * 17] = static_cast<char>(score / 10 + 48);
             theDisplay[1][10 + i * 17] = static_cast<char>(score % 10 + 48);
+        } else if (score < 1000){
+            theDisplay[1][8 + i * 17] = static_cast<char>(score / 100 + 48);
+            theDisplay[1][9 + i * 17] = static_cast<char>(score / 10 % 10 + 48);
+            theDisplay[1][10 + i * 17] = static_cast<char>(score % 10 + 48);
+        } else if (score < 10000){
+            theDisplay[1][7 + i * 17] = static_cast<char>(score / 1000 + 48);
+            theDisplay[1][8 + i * 17] = static_cast<char>(score / 100 % 10 + 48);
+            theDisplay[1][9 + i * 17] = static_cast<char>(score / 10 % 10 + 48);
+            theDisplay[1][10 + i * 17] = static_cast<char>(score % 10 + 48);
+        } else if (score < 100000){
+            theDisplay[1][6 + i * 17] = static_cast<char>(score / 10000 + 48);
+            theDisplay[1][7 + i * 17] = static_cast<char>(score / 1000 % 10 + 48);
+            theDisplay[1][8 + i * 17] = static_cast<char>(score / 100 % 10 + 48);
+            theDisplay[1][9 + i * 17] = static_cast<char>(score / 10 % 10 + 48);
+            theDisplay[1][10 + i * 17] = static_cast<char>(score % 10 + 48);
+        }else{
+            theDisplay[1][6 + i * 17] = '9';
+            theDisplay[1][7 + i * 17] = '9';
+            theDisplay[1][8 + i * 17] = '9';
+            theDisplay[1][9 + i * 17] = '9';
+            theDisplay[1][10 + i * 17] =  '9';
         }
     }
 }
@@ -221,8 +247,7 @@ void TextDisplay::notify() {
 }
 
 void TextDisplay::print(){
-    out << endl;
-    out << "*****************************************"<<endl;
+    out << "*****************************"<<endl;
     int columns = (int)(2*column + 6);
     for (int i = 0; i < row; i += 1) {
         for (int j = 0; j < columns; j += 1) {
@@ -230,6 +255,5 @@ void TextDisplay::print(){
         }
         out << endl;
     }
-    out << "*****************************************"<<endl;
-    out << endl;
+    out << "*****************************"<<endl;
 }

@@ -6,7 +6,7 @@
 class Level {
 protected:
     std::ifstream in;
-    
+    //Seed for randomness
     unsigned int seed;
     // Tell the Board whether addStar effect will apply in this level
     const bool star;
@@ -16,20 +16,30 @@ protected:
     bool isRandom;
     
 public:
+    //Record the lvel
     const int level;
     // Constructor
     Level(unsigned int seed, bool star, bool heavy, int level):
         seed{seed}, star{star}, heavy{heavy}, level{level},
         randomApply{false}, isRandom{true}{}
-    bool addStar()const{ return star; };
-    bool applyHeavy()const { return heavy;};
-    BlockType readNextBlock();
-    
-    //Virtual methods below:
-    virtual BlockType nextBlock() = 0;
+    //Destructor
     virtual ~Level(){}
+    
+    //Returns if stars apply
+    bool addStar()const{ return star; };
+    //Returns if heavy apply
+    bool applyHeavy()const { return heavy;};
+
+    //Virtual methods below:
+    //Returns the type of the next block
+    virtual BlockType nextBlock() = 0;
+    
+    //Set and unset the randomness
     virtual bool setRandom(){ return false; }
     virtual bool unsetRandom(const std::string file){ return false;}
+    
+    //If there is a file available, read the next block, and determines if it is a valid block type
+    BlockType readNextBlock();
 };
 
 

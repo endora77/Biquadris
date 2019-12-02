@@ -37,3 +37,6 @@ void Cell::setPosition(const int row, const int col){
     position.first = row;
     position.second = col;
 }
+BlockType Cell::getType() const{
+    return type;
+}

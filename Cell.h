@@ -25,12 +25,12 @@ public:
 
     // getState() returns the status of the cell (filled or not)
     int getState() const override;
+    
     // getPosition() returns the position of the cell on the board
     std::pair<int, int> getPosition() const;
-
-    BlockType getType() const{
-        return type;
-    }
+    
+    //Get the type of the block that the cell belongs to
+    BlockType getType() const;
 
 };
 

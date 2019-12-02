@@ -4,7 +4,7 @@ using namespace std;
 
 
 void Board::checkFilledLines(const Level* level){
-    tempScore = 0;;
+    int tempScore = 0;
     numDeleted  = 0;
     for(int i = gridH - 1; i > 3; i--){
         bool filled = true;
@@ -17,6 +17,7 @@ void Board::checkFilledLines(const Level* level){
         if(filled) {
             numDeleted ++;
             deleteRow(i);
+            i++;
         }
     }
     if(!numDeleted) countBlocks ++;
@@ -26,13 +27,17 @@ void Board::checkFilledLines(const Level* level){
         countBlocks = 0;
     }
     tempScore += numDeleted;
+    if(numDeleted)
+        tempScore += level->level;
     totalScore += tempScore*tempScore;
 }
 
 bool Board::checkPosition(Block* checkBlock, const unique_ptr<pair<int, int>[]>& pos){
     eraseBlock(checkBlock);
     for( int i = 0; i < 4; i++){
-        if(pos[i].first >= gridH || pos[i].second >= gridW || grid[pos[i].first][pos[i].second]){
+        if(pos[i].first < 0 || pos[i].second < 0 ||
+           pos[i].first >= gridH || pos[i].second >= gridW ||
+           grid[pos[i].first][pos[i].second]){
             addBlock(checkBlock);
             return false;
         }
@@ -120,7 +125,6 @@ void Board::restart(){
     }
     countBlocks = 0;
     totalScore = 0;
-    tempScore = 0;
 }
 
 void Board::eraseBlock(Block* block){
@@ -137,4 +141,18 @@ void Board::addBlock(Block* block){
         pair<int, int> pos = c.getPosition();
         grid[pos.first][pos.second] = &c;
     }
+}
+
+//Add score when a block is deleted:
+void Board::notify(Subject* s){
+    totalScore += (s->getState() + 1)*(s->getState() + 1);
+}
+
+int Board::getLinesDeleted() const{
+    return numDeleted;
+}
+Board::Board(const int height, const int width):
+    gridH{height + 3}, gridW{width}, countBlocks{0}, totalScore{0}, numDeleted{0}{
+    std::vector<Cell*> temp(gridW, nullptr);
+    for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
 }

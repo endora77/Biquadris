@@ -1,6 +1,24 @@
 #include "Player.h"
 using namespace std;
-
+Player::Player(std::string name, const int lev, std::vector<std::unique_ptr<Observer>>& displays,
+       const int height, const int width, int seed, const std::string file0):
+name{name}, file0 {file0}, restriction{Restriction::noRestriction},playing{false}{
+    for(auto& a : displays){
+        attach(a.get());
+    }
+    setLevel(lev, seed);
+    currentLevel = lev;
+    board = std::make_unique<Board>(height, width);
+    this->seed = seed;
+    success = true;
+    nextType = level->nextBlock();
+}
+bool Player::norand(const std::string file){
+    return level->unsetRandom(file);
+}
+bool Player::rand(){
+    return level->setRandom();
+}
 //Throws an error
 void Player::setLevel(const int l, unsigned int seed){
     switch(l){
@@ -200,14 +218,14 @@ int Player::getState()const{
     return success;
 }
 
-int Player::getLinesDeleted(){
+int Player::getLinesDeleted() const{
     return board->getLinesDeleted();
 }
 
 bool Player::setBlock(BlockType type){
     board->eraseBlock(currentBlock);
     Block* lastBlock = currentBlock;
-    currentBlock = board->newBlock(type, lastBlock->getCells()[0].getPosition().first, lastBlock->getCells()[0].getPosition().second, 0);
+    currentBlock = board->newBlock(type, lastBlock->getCells()[0].getPosition().first, lastBlock->getCells()[0].getPosition().second, level->level);
     unique_ptr<pair<int, int>[]> pos = currentBlock->calcPosition(MoveType::moveDown);
     if(!board->checkPosition(currentBlock, pos)){
         currentBlock = lastBlock;

@@ -16,11 +16,9 @@
 #include "TBlock.h"
 #include "StarBlock.h"
 #include "iostream"
-//Safe to include
 #include "Observer.h"
 #include "Enums.h"
 #include "Level.h"
-//Not safe to include, since Board includes Display, Display includes Game, Game inlcudes player, Player includes Board
 
 class Board final: public Observer{
     const int gridH;
@@ -32,38 +30,49 @@ class Board final: public Observer{
     int countBlocks;
     int numDeleted;
     int totalScore;
-    int tempScore;
+    
+private:
+    //Check the lowest cell in this column
+    int checkColBot(int col);
+    
+    //Check if the positon is valid for the target block
+    bool checkPosition(Block* checkBlock, const std::unique_ptr<std::pair<int, int>[]>& pos);
+    
+    //Check which lines are filled
+    void checkFilledLines(const Level* level);
+    
+    //Add star to the middle if neccesary
+    void addStar();
+    
+    //Delete the row
+    void deleteRow(int row);
+    
+    //Check if the cells have touched the top row
+    bool checkTop();
     
 public:
     friend class Player;
     friend class TextDisplay;
     Block* currentBlock;
+    
+    //Constructor
+    Board(const int height = 15, const int width = 11);
 
-    Board(const int height = 15, const int width = 11):
-    gridH{height + 3}, gridW{width}, countBlocks{0}, totalScore{0}, tempScore{0},numDeleted{0}{
-        std::vector<Cell*> temp(gridW, nullptr);
-        for(int i  = 0; i < gridH; i++)grid.emplace_back(temp);
-    }
-
+    //Get the pointer to a new block
     Block* newBlock(const BlockType type, const int row, const int col, const int level);
-    int checkColBot(int col);
-    bool checkPosition(Block* checkBlock, const std::unique_ptr<std::pair<int, int>[]>& pos);
-    void checkFilledLines(const Level* level);
-    void addStar();
-    void deleteRow(int row);
-    bool checkTop();
-
-    void draw();
+    
+    //Reset the board
     void restart();
+    
+    //Erase or add a block to the board
     void eraseBlock(Block* block);
     void addBlock(Block* block);
-    int getLinesDeleted(){
-        return numDeleted;
-    }
+    
+    //Get the number of lines that are delteted this time
+    int getLinesDeleted()const;
+    
     //Add score when a block is deleted:
-    void notify(Subject* s)override{
-        tempScore += s->getState();
-    }
+    void notify(Subject* s)override;
 };
 
 #endif

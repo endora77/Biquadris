@@ -1,8 +1,6 @@
 #include "Level.h"
 
 // Constructor
-
-
 BlockType Level::readNextBlock(){
     std::string block;
     if (in >> block) {

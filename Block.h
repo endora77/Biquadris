@@ -50,7 +50,7 @@ public:
     
     virtual ~Block() = 0;
     int getState() const override{
-        return deleted;
+        return level;
     }
 };
 

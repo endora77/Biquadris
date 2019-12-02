@@ -93,7 +93,7 @@ BlockType Command::getBlockType(const type t){
         throw "Not a valid Block type";
 }
 
-bool Command::getCommand(std::string cmd, Command::type &c, int& times){
+bool Command::getCommand(std::string cmd, Command::type &c, int& times, bool printCommand){
     if(!cmd.size())return false;
     try{
         std::string subCmd;
@@ -107,9 +107,9 @@ bool Command::getCommand(std::string cmd, Command::type &c, int& times){
         }
         subCmd = cmd.substr(cmd.find(firstChar));
         c = getSubCommand(subCmd);
-        out << cmd << std::endl;
+        if(printCommand) out << "Command: " << cmd << std::endl;
     }catch(const char* m){
-        out << m << std::endl;
+        out << cmd <<": "<<m << std::endl;
         return false;
     }
     return true;

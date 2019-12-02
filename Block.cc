@@ -97,11 +97,10 @@ void Block::getPos(std::unique_ptr<std::pair<int, int>[]>& poses, const int num,
     }
 }
 
-//Finished Below********************************************************************************************
 void Block::notify(){
     if(!checkExist()){
         deleted = true;
-        notifyObservers();
+        notifyObservers(this);
     }
 }
 
