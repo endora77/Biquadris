@@ -88,8 +88,8 @@ void TextDisplay::fillBlind() {
     // Check if one or more players has blind effect
     for (int i = 0; i < 2; i += 1) {
         if (game->players[i].restriction == Restriction::blind) {
-            for (int j = 3 + (i * 11) + (i * 6); j < 12 + (i * 11) + (i * 6); j += 1) {
-                for (int k = 3; k < 9; k += 1) {
+            for (int j = 2; j < 12; j += 1) {
+                for (int k = 2 + i * 17; k < 9 + i * 17; k += 1) {
                     theDisplay[j][k] = '?';
                 }
             }
