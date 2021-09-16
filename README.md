@@ -30,4 +30,4 @@ Other than up, down, left, right commands, the game has some surprise effects th
 
 Please refer to the folowing PDF for URL Design:
 
-https://github.com/endora77/Biquadris#:~:text=2%20years%20ago-,uml.pdf,-Organized%20files
+https://github.com/endora77/Biquadris/blob/master/uml.pdf
